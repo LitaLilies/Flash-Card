@@ -7,7 +7,7 @@
 - **Quản lý chủ đề (Deck)** – Tạo, đổi tên, xóa các bộ thẻ theo chủ đề
 - **Quản lý Flash Card** – Thêm, sửa, xóa thẻ (Tiếng Anh – Tiếng Việt)
 - **Học từ vựng** – Duyệt qua các thẻ để ghi nhớ
-- **Kiểm tra (Quiz)** – Trắc nghiệm từ vựng, ghi nhận kết quả
+- **Kiểm tra (Quiz)** – Viết lại nghĩa từ vựng, ghi nhận kết quả
 - **Ôn tập** – Các từ chưa nhớ được đưa lại hàng đợi để ôn lại
 - **Lịch sử kiểm tra** – Xem lại kết quả các lần kiểm tra trước
 
@@ -15,7 +15,7 @@
 
 | # | Cấu trúc | Mục đích |
 |---|-----------|----------|
-| 1 | Danh sách liên kết đôi (Doubly Linked List) | Lưu trữ Flash Card trong mỗi chủ đề |
+| 1 | Danh sách liên kết đôi (Doubly Linked List) | Lưu trữ Flash Card trong mỗi chủ đề | Mục xem từ vựng
 | 2 | Cây nhị phân tìm kiếm (BST) | Quản lý danh sách chủ đề theo thứ tự |
 | 3 | Hàng đợi (Queue) | Xử lý học và ôn tập Flash Card (FIFO) |
 | 4 | Danh sách liên kết đơn (Singly Linked List) | Lưu lịch sử kiểm tra |
