@@ -22,5 +22,26 @@ enum ConsoleColor {
     CLR_LIGHT_YELLOW = 14,
     CLR_BRIGHT_WHITE = 15
 };
+// --- Khoi tao & tien ich console ---
+void initConsole();
+void setColor(int textColor, int bgColor = CLR_BLACK);
+void resetColor();
+void clearScreen();
+
+// --- Ve khung & tieu de ---
+void drawTopBorder(int innerWidth);
+void drawMidBorder(int innerWidth);
+void drawBottomBorder(int innerWidth);
+void drawEmptyBoxLine(int innerWidth);
+void drawBoxLine(const string& text, int innerWidth, int color = CLR_WHITE);
+void drawBoxLineCentered(const string& text, int innerWidth, int color = CLR_WHITE);
+void drawThinSeparator(int innerWidth);
+void drawTitle();
+
+// --- Nhap lieu ---
+string inputString(const string& prompt);
+int    inputChoice(const string& prompt);
+void   pauseScreen();
+void   showMessage(const string& msg, int color);
 
 #endif // UI_H
