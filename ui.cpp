@@ -55,3 +55,87 @@ void resetColor() {
 void clearScreen() {
     system("cls");
 }
+// =====================================================================
+//  VE KHUNG
+// =====================================================================
+
+// Padding trai cho moi dong
+static void leftPad() {
+    cout << "  ";
+}
+
+void drawTopBorder(int w) {
+    setColor(CLR_CYAN);
+    leftPad();
+    cout << TL;
+    for (int i = 0; i < w; i++) cout << HZ;
+    cout << TR << "\n";
+}
+
+void drawMidBorder(int w) {
+    setColor(CLR_CYAN);
+    leftPad();
+    cout << ML;
+    for (int i = 0; i < w; i++) cout << HZ;
+    cout << MR << "\n";
+}
+
+void drawBottomBorder(int w) {
+    setColor(CLR_CYAN);
+    leftPad();
+    cout << BL;
+    for (int i = 0; i < w; i++) cout << HZ;
+    cout << BR << "\n";
+}
+
+void drawEmptyBoxLine(int w) {
+    setColor(CLR_CYAN);
+    leftPad();
+    cout << VT;
+    resetColor();
+    for (int i = 0; i < w; i++) cout << " ";
+    setColor(CLR_CYAN);
+    cout << VT << "\n";
+}
+
+void drawBoxLine(const string& text, int w, int color) {
+    setColor(CLR_CYAN);
+    leftPad();
+    cout << VT;
+    setColor(color);
+    cout << " " << text;
+    int pad = w - 1 - displayWidth(text) - 1;
+    for (int i = 0; i < pad; i++) cout << " ";
+    cout << " ";
+    setColor(CLR_CYAN);
+    cout << VT << "\n";
+}
+
+void drawBoxLineCentered(const string& text, int w, int color) {
+    int textW = displayWidth(text);
+    int totalPad = w - textW;
+    int leftP = totalPad / 2;
+    int rightP = totalPad - leftP;
+
+    setColor(CLR_CYAN);
+    leftPad();
+    cout << VT;
+    setColor(color);
+    for (int i = 0; i < leftP; i++) cout << " ";
+    cout << text;
+    for (int i = 0; i < rightP; i++) cout << " ";
+    setColor(CLR_CYAN);
+    cout << VT << "\n";
+}
+
+void drawThinSeparator(int w) {
+    setColor(CLR_CYAN);
+    leftPad();
+    cout << VT;
+    setColor(CLR_GRAY);
+    cout << " ";
+    for (int i = 0; i < w - 2; i++) cout << TH;
+    cout << " ";
+    setColor(CLR_CYAN);
+    cout << VT << "\n";
+}
