@@ -139,3 +139,69 @@ void drawThinSeparator(int w) {
     setColor(CLR_CYAN);
     cout << VT << "\n";
 }
+// =====================================================================
+//  TIEU DE CHUONG TRINH
+// =====================================================================
+
+void drawTitle() {
+    drawTopBorder(INNER_W);
+    drawEmptyBoxLine(INNER_W);
+    drawBoxLineCentered("FLASH CARD", INNER_W, CLR_LIGHT_YELLOW);
+    drawBoxLineCentered("Chuong Trinh Hoc Tu Vung Tieng Anh", INNER_W, CLR_YELLOW);
+    drawEmptyBoxLine(INNER_W);
+}
+
+// =====================================================================
+//  NHAP LIEU & TIEN ICH
+// =====================================================================
+
+static void showCursor() {
+    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_CURSOR_INFO ci;
+    GetConsoleCursorInfo(hOut, &ci);
+    ci.bVisible = TRUE;
+    SetConsoleCursorInfo(hOut, &ci);
+}
+
+static void hideCursor() {
+    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_CURSOR_INFO ci;
+    GetConsoleCursorInfo(hOut, &ci);
+    ci.bVisible = FALSE;
+    SetConsoleCursorInfo(hOut, &ci);
+}
+
+string inputString(const string& prompt) {
+    showCursor();
+    setColor(CLR_LIGHT_CYAN);
+    leftPad();
+    cout << "  " << prompt;
+    setColor(CLR_BRIGHT_WHITE);
+    string input;
+    getline(cin, input);
+    hideCursor();
+    return trim(input);
+}
+
+int inputChoice(const string& prompt) {
+    string s = inputString(prompt);
+    if (s.empty()) return -1;
+    return atoi(s.c_str());
+}
+
+void pauseScreen() {
+    cout << "\n";
+    setColor(CLR_GRAY);
+    leftPad();
+    cout << "  Nhan phim bat ky de tiep tuc...";
+    resetColor();
+    _getch();
+}
+
+void showMessage(const string& msg, int color) {
+    cout << "\n";
+    setColor(color);
+    leftPad();
+    cout << "  " << msg << "\n";
+    resetColor();
+}
