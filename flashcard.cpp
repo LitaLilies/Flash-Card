@@ -43,3 +43,17 @@ void deleteHistory(HistoryList& list, int index) {
     }
     list.count--;
 }
+void clearHistory(HistoryList& list) {
+    freeHistory(list);
+}
+
+void freeHistory(HistoryList& list) {
+    HistoryNode* curr = list.head;
+    while (curr) {
+        HistoryNode* next = curr->next;
+        delete curr;
+        curr = next;
+    }
+    list.head = nullptr;
+    list.count = 0;
+}
