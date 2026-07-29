@@ -1050,3 +1050,129 @@ void menuQuiz(TopicNode* root, HistoryList& history) {
   } // end while
 }
 
+// =====================================================================
+//  4. ON TAP (su dung Queue - the chua nho duoc dua lai cuoi queue)
+// =====================================================================
+
+void menuReview(TopicNode* root) {
+  while (true) {
+    clearScreen();
+    drawTitle();
+    string selectedName;
+    int sel = selectTopic(root, selectedName);
+    if (sel == -1) return;
+
+    // Doc file on tap
+    CardList wrongCards;
+    initCardList(wrongCards);
+    loadCards(getWrongFileName(selectedName), wrongCards);
+
+    if (wrongCards.count == 0) {
+        showMessage("[OK] Khong co tu nao can on tap! Ban da nho het roi!", CLR_LIGHT_GREEN);
+        freeCardList(wrongCards);
+        pauseScreen();
+        return;
+    }
+
+    // Dua vao Queue de on tap
+    CardQueue queue;
+    initQueue(queue);
+    CardNode* curr = wrongCards.head;
+    while (curr) {
+        enqueue(queue, curr->english, curr->vietnamese);
+        curr = curr->next;
+    }
+
+    int totalReview = wrongCards.count;
+    int rememberedCount = 0;
+    int cardNum = 0;
+
+    showMessage("[i] Co " + to_string(totalReview) + " tu can on tap. Ban se hoc lai cho den khi nho het!",
+                CLR_LIGHT_CYAN);
+    pauseScreen();
+
+    while (!isQueueEmpty(queue)) {
+        QueueNode* qn = dequeue(queue);
+        cardNum++;
+
+        string info = "ON TAP - " + selectedName + "  [Da nho: " + to_string(rememberedCount) + "/" + to_string(totalReview) + "]";
+
+        // Hien thi mat truoc
+        drawFlashCardUI(info, 0, 0,
+                        qn->english, qn->vietnamese, false);
+        drawBottomBorder(INNER_W);
+        _getch();
+
+        // Hien thi ca 2 mat
+        drawFlashCardUI(info, 0, 0,
+                        qn->english, qn->vietnamese, true);
+
+        drawMidBorder(INNER_W);
+        drawBoxLine("  [1] Da nho   [2] Chua nho   [0] Thoat", INNER_W, CLR_LIGHT_CYAN);
+        drawBottomBorder(INNER_W);
+        cout << "\n";
+
+        int choice = inputChoice("Lua chon cua ban: ");
+
+        if (choice == 0) {
+            // Thoat - dua the hien tai va con lai tro lai
+            enqueue(queue, qn->english, qn->vietnamese);
+            delete qn;
+            break;
+        }
+        else if (choice == 1) {
+            // Da nho -> khong dua lai queue
+            rememberedCount++;
+            showMessage("[OK] Gioi lam! Da xoa khoi danh sach on tap!", CLR_LIGHT_GREEN);
+            Sleep(500);
+        }
+        else {
+            // Chua nho -> dua lai cuoi queue
+            enqueue(queue, qn->english, qn->vietnamese);
+            showMessage("[i] The se quay lai sau!", CLR_LIGHT_YELLOW);
+            Sleep(500);
+        }
+
+        delete qn;
+    }
+
+    // Luu lai cac the con trong queue (chua nho)
+    CardList remaining;
+    initCardList(remaining);
+    while (!isQueueEmpty(queue)) {
+        QueueNode* qn = dequeue(queue);
+        addCard(remaining, qn->english, qn->vietnamese);
+        delete qn;
+    }
+
+    saveCards(getWrongFileName(selectedName), remaining);
+// Thong bao ket qua
+    clearScreen();
+    drawTopBorder(INNER_W);
+    drawEmptyBoxLine(INNER_W);
+    drawBoxLineCentered("KET QUA ON TAP", INNER_W, CLR_LIGHT_YELLOW);
+    drawEmptyBoxLine(INNER_W);
+    drawThinSeparator(INNER_W);
+    drawEmptyBoxLine(INNER_W);
+    drawBoxLineCentered("Da nho: " + to_string(rememberedCount) + " tu", INNER_W, CLR_LIGHT_GREEN);
+    drawBoxLineCentered("Con lai: " + to_string(remaining.count) + " tu can on tap", INNER_W,
+                        remaining.count > 0 ? CLR_LIGHT_YELLOW : CLR_LIGHT_GREEN);
+    drawEmptyBoxLine(INNER_W);
+
+    if (remaining.count == 0) {
+        drawBoxLineCentered("Tuyet voi! Ban da nho tat ca!", INNER_W, CLR_LIGHT_GREEN);
+        // Xoa file on tap neu da nho het
+        remove(getWrongFileName(selectedName).c_str());
+    } else {
+        drawBoxLineCentered("Hay tiep tuc on tap!", INNER_W, CLR_LIGHT_YELLOW);
+    }
+
+    drawEmptyBoxLine(INNER_W);
+    drawBottomBorder(INNER_W);
+
+    freeCardList(remaining);
+    freeCardList(wrongCards);
+    freeQueue(queue);
+    pauseScreen();
+  } // end while
+}
