@@ -39,3 +39,6 @@ void saveTopics(const string &filename, TopicNode *root);
 
 void loadCards(const string &filename, CardList &list);
 void saveCards(const string &filename, CardList &list);
+
+void loadHistory(const string &filename, HistoryList &list);
+void saveHistory(const string &filename, HistoryList &list);
