@@ -34,6 +34,7 @@ void freeHistory(HistoryList &list);
 // =====================================================================
 //  5. FILE I/O
 // =====================================================================
+
 void loadTopics(const string &filename, TopicNode *&root);
 void saveTopics(const string &filename, TopicNode *root);
 
