@@ -51,4 +51,8 @@ string getWrongFileName(const string &topicName);
 //  6. UTILITY
 // =====================================================================
 
+string trim(const string &s);
+string normalizeSpaces(const string &s);
+bool compareAnswer(const string &input, const string &answer);
+
 #endif // FLASHCARD_H
