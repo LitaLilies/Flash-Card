@@ -32,7 +32,7 @@ void clearHistory(HistoryList &list);
 void freeHistory(HistoryList &list);
 
 // =====================================================================
-//  5. FILE I/O.
+//  5. FILE I/O
 // =====================================================================
 
 void loadTopics(const string &filename, TopicNode *&root);
