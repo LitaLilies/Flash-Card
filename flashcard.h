@@ -44,4 +44,7 @@ void saveCards(const string &filename, CardList &list);
 void loadHistory(const string &filename, HistoryList &list);
 void saveHistory(const string &filename, HistoryList &list);
 
+string getCardFileName(const string &topicName);
+string getWrongFileName(const string &topicName);
+
 #endif // FLASHCARD_H
