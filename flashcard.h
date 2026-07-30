@@ -54,5 +54,8 @@ string getWrongFileName(const string &topicName);
 string trim(const string &s);
 string normalizeSpaces(const string &s);
 bool compareAnswer(const string &input, const string &answer);
+string getCurrentDate();
+bool isValidTopicName(const string &name);
+int displayWidth(const string &s);
 
 #endif // FLASHCARD_H
