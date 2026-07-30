@@ -47,4 +47,8 @@ void saveHistory(const string &filename, HistoryList &list);
 string getCardFileName(const string &topicName);
 string getWrongFileName(const string &topicName);
 
+// =====================================================================
+//  6. UTILITY
+// =====================================================================
+
 #endif // FLASHCARD_H
