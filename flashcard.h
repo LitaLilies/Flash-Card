@@ -43,3 +43,5 @@ void saveCards(const string &filename, CardList &list);
 
 void loadHistory(const string &filename, HistoryList &list);
 void saveHistory(const string &filename, HistoryList &list);
+
+#endif // FLASHCARD_H
