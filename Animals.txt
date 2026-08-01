@@ -1,0 +1,14 @@
+dog|chó
+cat|mèo
+bird|chim
+fish|cá
+elephant|voi
+tiger|hổ
+lion|sư tử
+bear|gấu
+monkey|khỉ
+rabbit|thỏ
+horse|ngựa
+cow|bò
+pig|lợn
+chicken|gà

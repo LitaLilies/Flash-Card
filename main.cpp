@@ -22,8 +22,13 @@
  */
 
 #include "ui.h"
+#include <cstdlib>
+#include <ctime>
 
 int main() {
+    // Khoi tao random seed
+    srand((unsigned int)time(0));
+    
     // Khoi tao giao dien console
     initConsole();
 

@@ -1,3 +1,9 @@
+/*
+ *  FLASH CARD - Hoc Tu Vung Tieng Anh
+ *  File: ui.h
+ *  Mo ta: Khai bao cac ham giao dien console
+ */
+
 #ifndef UI_H
 #define UI_H
 
@@ -22,6 +28,7 @@ enum ConsoleColor {
     CLR_LIGHT_YELLOW = 14,
     CLR_BRIGHT_WHITE = 15
 };
+
 // --- Khoi tao & tien ich console ---
 void initConsole();
 void setColor(int textColor, int bgColor = CLR_BLACK);
@@ -43,5 +50,29 @@ string inputString(const string& prompt);
 int    inputChoice(const string& prompt);
 void   pauseScreen();
 void   showMessage(const string& msg, int color);
+
+// --- Menu chinh ---
+void showMainMenu(TopicNode*& root, HistoryList& history);
+
+// --- Quan ly chu de ---
+void menuDeckManagement(TopicNode*& root);
+void createDeck(TopicNode*& root);
+void renameDeck(TopicNode*& root);
+void manageCards(TopicNode* root);
+void deleteDeckMenu(TopicNode*& root);
+void addCardsFlow(const string& topicName);
+
+// --- Chon chu de ---
+int selectTopic(TopicNode* root, string& selectedName);
+
+// --- Hoc, kiem tra, on tap, lich su ---
+void menuLearnFlashCard(TopicNode* root);
+void menuQuiz(TopicNode* root, HistoryList& history);
+void menuReview(TopicNode* root);
+void menuHistory(HistoryList& history);
+
+// --- Tro choi moi ---
+void menuWordMatching(TopicNode* root, HistoryList& history);
+void menuReverseQuiz(TopicNode* root, HistoryList& history);
 
 #endif // UI_H

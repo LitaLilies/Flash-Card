@@ -1,0 +1,13 @@
+orange|cam
+apple|táo
+pineapple|thơm
+water|nước
+milk|sữa
+coffee|cà phê
+tea|trà
+juice|nước ép
+beer|bia
+wine|rượu vang
+soda|nước ngọt
+coconut|dừa
+lemon|chanh

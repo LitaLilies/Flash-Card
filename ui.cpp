@@ -1,10 +1,100 @@
+/*
+ *  FLASH CARD - Hoc Tu Vung Tieng Anh
+ *  File: ui.cpp
+ *  Mo ta: Cai dat giao dien console (menu, hien thi, nhap lieu)
+ */
+
 #include "ui.h"
 #include <iostream>
 #include <fstream>
-#include <conio.h>
 #include <iomanip>
 #include <cstdio>
+#include <cstdlib>
+#include <clocale>
+#ifdef _WIN32
+#include <conio.h>
 #include <windows.h>
+#else
+#include <unistd.h>
+#include <termios.h>
+#include <sys/select.h>
+#endif
+using namespace std;
+
+#ifdef _WIN32
+static void setConsoleUtf8() {
+    SetConsoleOutputCP(65001);
+    SetConsoleCP(65001);
+}
+#else
+static void setConsoleUtf8() {
+    setlocale(LC_ALL, "");
+}
+#endif
+
+#ifdef _WIN32
+static int readConsoleKey() {
+    return _getch();
+}
+#else
+static int readConsoleKey() {
+    struct termios oldt, newt;
+    tcgetattr(STDIN_FILENO, &oldt);
+    newt = oldt;
+    newt.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+
+    char ch = 0;
+    read(STDIN_FILENO, &ch, 1);
+
+    if (ch == 27) {
+        char seq[2] = {0, 0};
+        struct timeval tv;
+        tv.tv_sec = 0;
+        tv.tv_usec = 200000;
+        fd_set set;
+        FD_ZERO(&set);
+        FD_SET(STDIN_FILENO, &set);
+        if (select(STDIN_FILENO + 1, &set, nullptr, nullptr, &tv) > 0) {
+            read(STDIN_FILENO, &seq[0], 1);
+            if (seq[0] == '[') {
+                if (select(STDIN_FILENO + 1, &set, nullptr, nullptr, &tv) > 0) {
+                    read(STDIN_FILENO, &seq[1], 1);
+                }
+            }
+        }
+        tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+        if (seq[0] == '[') {
+            switch (seq[1]) {
+                case 'A': return 224;
+                case 'B': return 224;
+                case 'C': return 224;
+                case 'D': return 224;
+            }
+        }
+        return 27;
+    }
+
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+    return static_cast<unsigned char>(ch);
+}
+#endif
+
+#ifdef _WIN32
+#define SLEEP_MS(ms) Sleep(ms)
+#else
+#define SLEEP_MS(ms) usleep((ms) * 1000)
+#endif
+
+#ifndef _WIN32
+int _getch() {
+    return readConsoleKey();
+}
+
+void Sleep(unsigned int ms) {
+    SLEEP_MS(ms);
+}
+#endif
 
 // =====================================================================
 //  HANG SO GIAO DIEN
@@ -27,34 +117,51 @@ static const char* TH = "\xE2\x94\x80"; // Thin Horizontal
 // =====================================================================
 
 void initConsole() {
+#ifdef _WIN32
     SetConsoleOutputCP(65001);
     SetConsoleCP(65001);
     SetConsoleTitleA("Flash Card - Hoc Tu Vung Tieng Anh");
 
-    // An con tro nhap nhay
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
     CONSOLE_CURSOR_INFO cursorInfo;
     GetConsoleCursorInfo(hOut, &cursorInfo);
     cursorInfo.bVisible = FALSE;
     SetConsoleCursorInfo(hOut, &cursorInfo);
 
-    // Kich thuoc cua so
     SMALL_RECT rect = {0, 0, 79, 34};
     SetConsoleWindowInfo(hOut, TRUE, &rect);
+#else
+    setConsoleUtf8();
+#endif
 }
 
 void setColor(int textColor, int bgColor) {
+#ifdef _WIN32
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),
                             (WORD)(textColor | (bgColor << 4)));
+#else
+    (void)textColor;
+    (void)bgColor;
+#endif
 }
 
 void resetColor() {
+#ifdef _WIN32
     setColor(CLR_WHITE, CLR_BLACK);
+#else
+    cout << "\033[0m";
+#endif
 }
 
 void clearScreen() {
+#ifdef _WIN32
     system("cls");
+#else
+    cout << "\033[2J\033[H";
+    cout.flush();
+#endif
 }
+
 // =====================================================================
 //  VE KHUNG
 // =====================================================================
@@ -139,6 +246,7 @@ void drawThinSeparator(int w) {
     setColor(CLR_CYAN);
     cout << VT << "\n";
 }
+
 // =====================================================================
 //  TIEU DE CHUONG TRINH
 // =====================================================================
@@ -156,19 +264,27 @@ void drawTitle() {
 // =====================================================================
 
 static void showCursor() {
+#ifdef _WIN32
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
     CONSOLE_CURSOR_INFO ci;
     GetConsoleCursorInfo(hOut, &ci);
     ci.bVisible = TRUE;
     SetConsoleCursorInfo(hOut, &ci);
+#else
+    cout << "\033[?25h";
+#endif
 }
 
 static void hideCursor() {
+#ifdef _WIN32
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
     CONSOLE_CURSOR_INFO ci;
     GetConsoleCursorInfo(hOut, &ci);
     ci.bVisible = FALSE;
     SetConsoleCursorInfo(hOut, &ci);
+#else
+    cout << "\033[?25l";
+#endif
 }
 
 string inputString(const string& prompt) {
@@ -261,6 +377,9 @@ void showMainMenu(TopicNode*& root, HistoryList& history) {
         drawBoxLine("  [4]  On tap",                 INNER_W, CLR_BRIGHT_WHITE);
         drawBoxLine("  [5]  Lich su ket qua",        INNER_W, CLR_BRIGHT_WHITE);
         drawEmptyBoxLine(INNER_W);
+        drawBoxLine("  [6]  Tro choi Noi tu",        INNER_W, CLR_LIGHT_CYAN);
+        drawBoxLine("  [7]  Tro choi Viet tieng Anh", INNER_W, CLR_LIGHT_CYAN);
+        drawEmptyBoxLine(INNER_W);
         drawBoxLine("  [0]  Thoat",                  INNER_W, CLR_GRAY);
         drawEmptyBoxLine(INNER_W);
         drawBottomBorder(INNER_W);
@@ -274,6 +393,8 @@ void showMainMenu(TopicNode*& root, HistoryList& history) {
             case 3: menuQuiz(root, history);   break;
             case 4: menuReview(root);          break;
             case 5: menuHistory(history);      break;
+            case 6: menuWordMatching(root, history); break;
+            case 7: menuReverseQuiz(root, history);  break;
             case 0:
                 // Luu du lieu truoc khi thoat
                 saveTopics("Topics.txt", root);
@@ -476,46 +597,59 @@ void renameDeck(TopicNode*& root) {
 
 // --- 1.3 Quan ly Flash Card ---
 
+// Ham noi bo: in 1 hang trong bang the
+static void printCardRow(int idx, const string& eng, const string& vie) {
+    string stt = to_string(idx);
+    while ((int)stt.length() < 3) stt = " " + stt;
+
+    string engShow = eng;
+    string vieShow = vie;
+    if (displayWidth(engShow) > 22) engShow = engShow.substr(0, 20) + "..";
+    if (displayWidth(vieShow) > 22) vieShow = vieShow.substr(0, 20) + "..";
+
+    string engPad = engShow;
+    int engW = displayWidth(engShow);
+    for (int i = engW; i < 22; i++) engPad += " ";
+
+    string viePad = vieShow;
+    int vieW = displayWidth(vieShow);
+    for (int i = vieW; i < 22; i++) viePad += " ";
+
+    string line = "  " + stt + " | " + engPad + " | " + viePad;
+    drawBoxLine(line, INNER_W, CLR_WHITE);
+}
+
+// Hien thi danh sach the theo thu tu goc (thu tu nhap vao)
 static void displayCardList(CardList& cards) {
     if (cards.count == 0) {
         drawBoxLineCentered("(Chua co Flash Card nao)", INNER_W, CLR_GRAY);
         return;
     }
-
-    // Tieu de bang
     string header = "  STT | Tieng Anh              | Tieng Viet";
     drawBoxLine(header, INNER_W, CLR_LIGHT_YELLOW);
     drawThinSeparator(INNER_W);
-
     CardNode* curr = cards.head;
-    int idx = 1;
-    while (curr) {
-        // Dinh dang dong
-        string stt = to_string(idx);
-        while ((int)stt.length() < 3) stt = " " + stt;
+    for (int idx = 1; curr; idx++, curr = curr->next)
+        printCardRow(idx, curr->english, curr->vietnamese);
+}
 
-        string eng = curr->english;
-        string vie = curr->vietnamese;
-
-        // Cat bot neu qua dai
-        if (displayWidth(eng) > 22) eng = eng.substr(0, 20) + "..";
-        if (displayWidth(vie) > 22) vie = vie.substr(0, 20) + "..";
-
-        // Padding
-        string engPad = eng;
-        int engW = displayWidth(eng);
-        for (int i = engW; i < 22; i++) engPad += " ";
-
-        string viePad = vie;
-        int vieW = displayWidth(vie);
-        for (int i = vieW; i < 22; i++) viePad += " ";
-
-        string line = "  " + stt + " | " + engPad + " | " + viePad;
-        drawBoxLine(line, INNER_W, CLR_WHITE);
-
-        curr = curr->next;
-        idx++;
+// Hien thi danh sach the da duoc QUICK SORT theo ten tieng Anh A->Z
+static void displaySortedCardList(CardList& cards) {
+    if (cards.count == 0) {
+        drawBoxLineCentered("(Chua co Flash Card nao)", INNER_W, CLR_GRAY);
+        return;
     }
+    // --- AP DUNG QUICK SORT ---
+    CardNode** arr = cardListToSortedArray(cards);   // O(n log n)
+
+    drawBoxLineCentered("(Sap xep A->Z bang Quick Sort)", INNER_W, CLR_LIGHT_CYAN);
+    string header = "  STT | Tieng Anh              | Tieng Viet";
+    drawBoxLine(header, INNER_W, CLR_LIGHT_YELLOW);
+    drawThinSeparator(INNER_W);
+    for (int i = 0; i < cards.count; i++)
+        printCardRow(i + 1, arr[i]->english, arr[i]->vietnamese);
+
+    delete[] arr;
 }
 
 void manageCards(TopicNode* root) {
@@ -542,6 +676,7 @@ void manageCards(TopicNode* root) {
 
         drawEmptyBoxLine(INNER_W);
         drawBoxLine("  [1] Them  [2] Sua  [3] Xoa  [4] Xem the  [0] Quay lai", INNER_W, CLR_LIGHT_GREEN);
+        drawBoxLine("  [5] Sap xep A->Z (Quick Sort)", INNER_W, CLR_LIGHT_CYAN);
         drawEmptyBoxLine(INNER_W);
         drawBottomBorder(INNER_W);
         cout << "\n";
@@ -551,6 +686,23 @@ void manageCards(TopicNode* root) {
         if (choice == 0) {
             freeCardList(cards);
             return;
+        }
+
+        // [5] Sap xep bang Quick Sort
+        if (choice == 5) {
+            clearScreen();
+            drawTitle();
+            drawMidBorder(INNER_W);
+            drawBoxLineCentered("SAP XEP FLASH CARD - QUICK SORT", INNER_W, CLR_LIGHT_CYAN);
+            drawBoxLineCentered("Chu de: " + selectedName, INNER_W, CLR_YELLOW);
+            drawThinSeparator(INNER_W);
+            displaySortedCardList(cards);
+            drawEmptyBoxLine(INNER_W);
+            drawBottomBorder(INNER_W);
+            showMessage("[i] Quick Sort A->Z hoan tat! (Thu tu goc khong thay doi)", CLR_LIGHT_CYAN);
+            freeCardList(cards);
+            pauseScreen();
+            continue;
         }
 
         if (choice == 4) {
@@ -959,11 +1111,14 @@ void menuQuiz(TopicNode* root, HistoryList& history) {
             break;
         }
 
-        if (compareAnswer(answer, curr->vietnamese)) {
+        if (compareAnswerFlexible(answer, curr->vietnamese)) {
             correctCount++;
-            showMessage("[OK] DUNG ROI!", CLR_LIGHT_GREEN);
+            string feedback = getCorrectFeedback();
+            showMessage("[OK] DUNG ROI! " + feedback, CLR_LIGHT_GREEN);
         } else {
-            showMessage("[X] SAI! Dap an dung: " + curr->vietnamese, CLR_LIGHT_RED);
+            string feedback = getWrongFeedback();
+            showMessage("[X] SAI! " + feedback, CLR_LIGHT_RED);
+            showMessage("     Dap an dung: " + curr->vietnamese, CLR_YELLOW);
             addCard(wrongCards, curr->english, curr->vietnamese);
         }
 
@@ -1123,14 +1278,16 @@ void menuReview(TopicNode* root) {
         else if (choice == 1) {
             // Da nho -> khong dua lai queue
             rememberedCount++;
-            showMessage("[OK] Gioi lam! Da xoa khoi danh sach on tap!", CLR_LIGHT_GREEN);
-            Sleep(500);
+            string feedback = getCorrectFeedback();
+            showMessage("[OK] " + feedback + " Da xoa khoi danh sach on tap!", CLR_LIGHT_GREEN);
+            Sleep(800);
         }
         else {
             // Chua nho -> dua lai cuoi queue
             enqueue(queue, qn->english, qn->vietnamese);
-            showMessage("[i] The se quay lai sau!", CLR_LIGHT_YELLOW);
-            Sleep(500);
+            string feedback = getWrongFeedback();
+            showMessage("[i] " + feedback + " The se quay lai sau!", CLR_LIGHT_YELLOW);
+            Sleep(800);
         }
 
         delete qn;
@@ -1146,7 +1303,8 @@ void menuReview(TopicNode* root) {
     }
 
     saveCards(getWrongFileName(selectedName), remaining);
-// Thong bao ket qua
+
+    // Thong bao ket qua
     clearScreen();
     drawTopBorder(INNER_W);
     drawEmptyBoxLine(INNER_W);
@@ -1173,6 +1331,458 @@ void menuReview(TopicNode* root) {
     freeCardList(remaining);
     freeCardList(wrongCards);
     freeQueue(queue);
+    pauseScreen();
+  } // end while
+}
+
+// =====================================================================
+//  5. LICH SU KET QUA
+// =====================================================================
+
+void menuHistory(HistoryList& history) {
+  while (true) {
+    clearScreen();
+    drawTitle();
+    drawMidBorder(INNER_W);
+    drawBoxLineCentered("LICH SU KIEM TRA", INNER_W, CLR_LIGHT_YELLOW);
+    drawThinSeparator(INNER_W);
+
+    if (history.count == 0) {
+        drawEmptyBoxLine(INNER_W);
+        drawBoxLineCentered("(Chua co lich su kiem tra nao)", INNER_W, CLR_GRAY);
+        drawEmptyBoxLine(INNER_W);
+        drawBottomBorder(INNER_W);
+        pauseScreen();
+        return;
+    }
+
+    // Tieu de
+    string header = " STT | Ngay kiem tra     | Chu de         | Ket qua";
+    drawBoxLine(header, INNER_W, CLR_LIGHT_CYAN);
+    drawThinSeparator(INNER_W);
+
+    HistoryNode* curr = history.head;
+    int idx = 1;
+    while (curr) {
+        string stt = to_string(idx);
+        while ((int)stt.length() < 3) stt = " " + stt;
+
+        string date = curr->date;
+        int dateW = displayWidth(date);
+        for (int i = dateW; i < 16; i++) date += " ";
+
+        string topic = curr->topic;
+        int topicW = displayWidth(topic);
+        if (topicW > 14) topic = topic.substr(0, 12) + "..";
+        topicW = displayWidth(topic);
+        for (int i = topicW; i < 14; i++) topic += " ";
+
+        string result = to_string(curr->correct) + "/" + to_string(curr->total);
+        int pct = (curr->total > 0) ? (curr->correct * 100 / curr->total) : 0;
+        result += " (" + to_string(pct) + "%)";
+
+        string line = " " + stt + " | " + date + " | " + topic + " | " + result;
+
+        int color = (pct >= 80) ? CLR_LIGHT_GREEN :
+                    (pct >= 50) ? CLR_LIGHT_YELLOW : CLR_LIGHT_RED;
+
+        drawBoxLine(line, INNER_W, color);
+
+        curr = curr->next;
+        idx++;
+    }
+
+    drawEmptyBoxLine(INNER_W);
+    drawBoxLine("  [1] Xoa 1 muc  [2] Xoa toan bo  [0] Quay lai", INNER_W, CLR_LIGHT_GREEN);
+    drawBoxLine("  [3] Sap xep theo diem % (Merge Sort)", INNER_W, CLR_LIGHT_CYAN);
+    drawEmptyBoxLine(INNER_W);
+    drawBottomBorder(INNER_W);
+    cout << "\n";
+
+    int choice = inputChoice("Nhap lua chon: ");
+
+    if (choice == 0) return;
+
+    if (choice == 3) {
+        // --- AP DUNG MERGE SORT: sap xep lich su theo diem % giam dan ---
+        clearScreen();
+        drawTitle();
+        drawMidBorder(INNER_W);
+        drawBoxLineCentered("LICH SU - SAP XEP THEO DIEM (MERGE SORT)", INNER_W, CLR_LIGHT_YELLOW);
+        drawBoxLineCentered("Giam dan: cao nhat -> thap nhat", INNER_W, CLR_LIGHT_CYAN);
+        drawThinSeparator(INNER_W);
+
+        HistoryNode** arr = historyToSortedArray(history);   // O(n log n)
+
+        string header = " STT | Ngay kiem tra     | Chu de         | Ket qua";
+        drawBoxLine(header, INNER_W, CLR_LIGHT_CYAN);
+        drawThinSeparator(INNER_W);
+
+        for (int i = 0; i < history.count; i++) {
+            HistoryNode* h = arr[i];
+            string stt = to_string(i + 1);
+            while ((int)stt.length() < 3) stt = " " + stt;
+
+            string date = h->date;
+            int dateW = displayWidth(date);
+            for (int k = dateW; k < 16; k++) date += " ";
+
+            string topic = h->topic;
+            int topicW = displayWidth(topic);
+            if (topicW > 14) topic = topic.substr(0, 12) + "..";
+            topicW = displayWidth(topic);
+            for (int k = topicW; k < 14; k++) topic += " ";
+
+            int pct = (h->total > 0) ? (h->correct * 100 / h->total) : 0;
+            string result = to_string(h->correct) + "/" + to_string(h->total)
+                          + " (" + to_string(pct) + "%)";
+
+            string line = " " + stt + " | " + date + " | " + topic + " | " + result;
+            int color = (pct >= 80) ? CLR_LIGHT_GREEN :
+                        (pct >= 50) ? CLR_LIGHT_YELLOW : CLR_LIGHT_RED;
+            drawBoxLine(line, INNER_W, color);
+        }
+
+        delete[] arr;
+
+        drawEmptyBoxLine(INNER_W);
+        drawBottomBorder(INNER_W);
+        showMessage("[i] Merge Sort hoan tat! Thu tu goc khong thay doi.", CLR_LIGHT_CYAN);
+        pauseScreen();
+    }
+    else if (choice == 1) {
+        int delIdx = inputChoice("Nhap STT can xoa (1-" + to_string(history.count) + "): ");
+        if (delIdx < 1 || delIdx > history.count) {
+            showMessage("[!] STT khong hop le!", CLR_LIGHT_RED);
+        } else {
+            deleteHistory(history, delIdx);
+            saveHistory("History.txt", history);
+            showMessage("[OK] Da xoa muc lich su!", CLR_LIGHT_GREEN);
+        }
+        pauseScreen();
+    }
+    else if (choice == 2) {
+        int confirm = inputChoice("Xac nhan xoa TOAN BO lich su? (1 = Co, 0 = Khong): ");
+        if (confirm == 1) {
+            clearHistory(history);
+            saveHistory("History.txt", history);
+            showMessage("[OK] Da xoa toan bo lich su!", CLR_LIGHT_GREEN);
+        } else {
+            showMessage("[i] Da huy.", CLR_GRAY);
+        }
+        pauseScreen();
+    }
+    else {
+        showMessage("[!] Lua chon khong hop le!", CLR_LIGHT_RED);
+        pauseScreen();
+    }
+  } // end while
+}
+
+
+// =====================================================================
+//  6. TRO CHOI NOI TU (WORD MATCHING)
+// =====================================================================
+
+void menuWordMatching(TopicNode* root, HistoryList& history) {
+  while (true) {
+    clearScreen();
+    drawTitle();
+    string selectedName;
+    int sel = selectTopic(root, selectedName);
+    if (sel == -1) return;
+
+    // Load the
+    CardList cards;
+    initCardList(cards);
+    loadCards(getCardFileName(selectedName), cards);
+
+    if (cards.count == 0) {
+        showMessage("[!] Chu de nay chua co Flash Card nao!", CLR_LIGHT_RED);
+        freeCardList(cards);
+        pauseScreen();
+        return;
+    }
+
+    // Toi thieu 3 tu de choi
+    if (cards.count < 3) {
+        showMessage("[!] Can it nhat 3 tu de choi tro noi tu!", CLR_LIGHT_RED);
+        freeCardList(cards);
+        pauseScreen();
+        return;
+    }
+
+    // Chuyen sang mang de tron
+    CardNode** cardArr = new CardNode*[cards.count];
+    CardNode* curr = cards.head;
+    int idx = 0;
+    while (curr) {
+        cardArr[idx++] = curr;
+        curr = curr->next;
+    }
+
+    // Tron ngau nhien
+    shuffleCards(cardArr, cards.count);
+
+    int questionsPerRound = (cards.count >= 5) ? 5 : cards.count;
+    int totalCorrect = 0;
+    int totalQuestions = 0;
+    bool quitted = false;
+
+    for (int round = 0; round < cards.count; round += questionsPerRound) {
+        int numInRound = (round + questionsPerRound <= cards.count) ? questionsPerRound : (cards.count - round);
+        
+        // Lay cac tu cho round nay
+        CardNode** roundCards = cardArr + round;
+        
+        // Tron ngau nhien dap an
+        string* shuffledAnswers = new string[numInRound];
+        for (int i = 0; i < numInRound; i++) {
+            shuffledAnswers[i] = roundCards[i]->vietnamese;
+        }
+        // Tron cac dap an
+        for (int i = numInRound - 1; i > 0; i--) {
+            int j = rand() % (i + 1);
+            string temp = shuffledAnswers[i];
+            shuffledAnswers[i] = shuffledAnswers[j];
+            shuffledAnswers[j] = temp;
+        }
+
+        // Hien thi cau hoi
+        for (int q = 0; q < numInRound; q++) {
+            clearScreen();
+            drawTopBorder(INNER_W);
+            drawEmptyBoxLine(INNER_W);
+            
+            string info = "TRO NOI TU - " + selectedName + "  [" + to_string(totalQuestions + 1) + "/" + to_string(cards.count) + "]";
+            drawBoxLineCentered(info, INNER_W, CLR_LIGHT_YELLOW);
+            
+            drawEmptyBoxLine(INNER_W);
+            drawThinSeparator(INNER_W);
+            drawEmptyBoxLine(INNER_W);
+            
+            // Hien thi tu tieng Anh
+            drawBoxLineCentered("Tu can noi: " + roundCards[q]->english, INNER_W, CLR_BRIGHT_WHITE);
+            
+            drawEmptyBoxLine(INNER_W);
+            drawThinSeparator(INNER_W);
+            drawEmptyBoxLine(INNER_W);
+            
+            // Hien thi cac lua chon
+            drawBoxLine("  Chon nghia dung:", INNER_W, CLR_LIGHT_CYAN);
+            drawEmptyBoxLine(INNER_W);
+            
+            for (int i = 0; i < numInRound; i++) {
+                string choice = "  [" + to_string(i + 1) + "]  " + shuffledAnswers[i];
+                drawBoxLine(choice, INNER_W, CLR_WHITE);
+            }
+            
+            drawEmptyBoxLine(INNER_W);
+            drawBottomBorder(INNER_W);
+            
+            cout << "\n";
+            int answer = inputChoice("Chon dap an (1-" + to_string(numInRound) + ", 0 = Thoat): ");
+            
+            if (answer == 0) {
+                quitted = true;
+                break;
+            }
+            
+            totalQuestions++;
+            
+            if (answer >= 1 && answer <= numInRound) {
+                if (compareAnswerFlexible(shuffledAnswers[answer - 1], roundCards[q]->vietnamese)) {
+                    totalCorrect++;
+                    string feedback = getCorrectFeedback();
+                    showMessage("[OK] DUNG ROI! " + feedback, CLR_LIGHT_GREEN);
+                } else {
+                    string feedback = getWrongFeedback();
+                    showMessage("[X] SAI! " + feedback, CLR_LIGHT_RED);
+                    showMessage("     Dap an dung: " + roundCards[q]->vietnamese, CLR_YELLOW);
+                }
+            } else {
+                showMessage("[!] Lua chon khong hop le!", CLR_LIGHT_RED);
+                totalQuestions--;
+                q--;
+            }
+            
+            pauseScreen();
+        }
+        
+        delete[] shuffledAnswers;
+        
+        if (quitted) break;
+    }
+
+    delete[] cardArr;
+
+    if (totalQuestions == 0) {
+        showMessage("[i] Da thoat tro choi.", CLR_GRAY);
+        freeCardList(cards);
+        pauseScreen();
+        return;
+    }
+
+    // Hien thi ket qua
+    clearScreen();
+    drawTopBorder(INNER_W);
+    drawEmptyBoxLine(INNER_W);
+    drawBoxLineCentered("KET QUA TRO NOI TU", INNER_W, CLR_LIGHT_YELLOW);
+    drawBoxLineCentered("Chu de: " + selectedName, INNER_W, CLR_YELLOW);
+    drawEmptyBoxLine(INNER_W);
+    drawThinSeparator(INNER_W);
+    drawEmptyBoxLine(INNER_W);
+
+    string resultStr = "Diem: " + to_string(totalCorrect) + " / " + to_string(totalQuestions);
+    int pct = (totalQuestions > 0) ? (totalCorrect * 100 / totalQuestions) : 0;
+    string pctStr = "Ty le dung: " + to_string(pct) + "%";
+
+    int resultColor = (pct >= 80) ? CLR_LIGHT_GREEN :
+                      (pct >= 50) ? CLR_LIGHT_YELLOW : CLR_LIGHT_RED;
+
+    drawBoxLineCentered(resultStr, INNER_W, resultColor);
+    drawBoxLineCentered(pctStr,    INNER_W, resultColor);
+
+    drawEmptyBoxLine(INNER_W);
+
+    if (pct >= 80) {
+        drawBoxLineCentered("Tuyet voi! Ban noi tu cuc tot!", INNER_W, CLR_LIGHT_GREEN);
+    } else if (pct >= 50) {
+        drawBoxLineCentered("Kha on! Lam them di nao!", INNER_W, CLR_LIGHT_YELLOW);
+    } else {
+        drawBoxLineCentered("Can on tap them nhe!", INNER_W, CLR_LIGHT_RED);
+    }
+
+    drawEmptyBoxLine(INNER_W);
+    drawBottomBorder(INNER_W);
+
+    // Luu vao lich su
+    string dateStr = getCurrentDate();
+    addHistory(history, dateStr, selectedName + " (Noi tu)", totalCorrect, totalQuestions);
+    saveHistory("History.txt", history);
+
+    freeCardList(cards);
+    pauseScreen();
+  } // end while
+}
+
+// =====================================================================
+//  7. TRO CHOI VIET TIENG ANH (REVERSE QUIZ)
+// =====================================================================
+
+void menuReverseQuiz(TopicNode* root, HistoryList& history) {
+  while (true) {
+    clearScreen();
+    drawTitle();
+    string selectedName;
+    int sel = selectTopic(root, selectedName);
+    if (sel == -1) return;
+
+    // Load the
+    CardList cards;
+    initCardList(cards);
+    loadCards(getCardFileName(selectedName), cards);
+
+    if (cards.count == 0) {
+        showMessage("[!] Chu de nay chua co Flash Card nao!", CLR_LIGHT_RED);
+        freeCardList(cards);
+        pauseScreen();
+        return;
+    }
+
+    int totalCards = cards.count;
+    int correctCount = 0;
+
+    CardNode* curr = cards.head;
+    int idx = 0;
+    bool quitted = false;
+
+    while (curr) {
+        idx++;
+        clearScreen();
+        drawTopBorder(INNER_W);
+        drawEmptyBoxLine(INNER_W);
+
+        string info = "VIET TIENG ANH - " + selectedName + "  [" + to_string(idx) + "/" + to_string(totalCards) + "]";
+        drawBoxLineCentered(info, INNER_W, CLR_LIGHT_YELLOW);
+
+        drawEmptyBoxLine(INNER_W);
+        drawThinSeparator(INNER_W);
+        drawEmptyBoxLine(INNER_W);
+        drawBoxLineCentered(curr->vietnamese, INNER_W, CLR_BRIGHT_WHITE);
+        drawEmptyBoxLine(INNER_W);
+        drawBottomBorder(INNER_W);
+
+        cout << "\n";
+        string answer = inputString("Viet tu tieng Anh (0 = Thoat): ");
+
+        if (answer == "0") {
+            // Thoat giua chung
+            totalCards = idx - 1;
+            quitted = true;
+            break;
+        }
+
+        if (compareAnswerFlexible(answer, curr->english)) {
+            correctCount++;
+            string feedback = getCorrectFeedback();
+            showMessage("[OK] CHINH XAC! " + feedback, CLR_LIGHT_GREEN);
+        } else {
+            string feedback = getWrongFeedback();
+            showMessage("[X] SAI ROI! " + feedback, CLR_LIGHT_RED);
+            showMessage("     Dap an dung: " + curr->english, CLR_YELLOW);
+        }
+
+        pauseScreen();
+        curr = curr->next;
+    }
+
+    if (quitted && totalCards == 0) {
+        showMessage("[i] Da thoat kiem tra.", CLR_GRAY);
+        freeCardList(cards);
+        pauseScreen();
+        return;
+    }
+
+    // Hien thi ket qua
+    clearScreen();
+    drawTopBorder(INNER_W);
+    drawEmptyBoxLine(INNER_W);
+    drawBoxLineCentered("KET QUA VIET TIENG ANH", INNER_W, CLR_LIGHT_YELLOW);
+    drawBoxLineCentered("Chu de: " + selectedName, INNER_W, CLR_YELLOW);
+    drawEmptyBoxLine(INNER_W);
+    drawThinSeparator(INNER_W);
+    drawEmptyBoxLine(INNER_W);
+
+    string resultStr = "Diem: " + to_string(correctCount) + " / " + to_string(totalCards);
+    int pct = (totalCards > 0) ? (correctCount * 100 / totalCards) : 0;
+    string pctStr = "Ty le dung: " + to_string(pct) + "%";
+
+    int resultColor = (pct >= 80) ? CLR_LIGHT_GREEN :
+                      (pct >= 50) ? CLR_LIGHT_YELLOW : CLR_LIGHT_RED;
+
+    drawBoxLineCentered(resultStr, INNER_W, resultColor);
+    drawBoxLineCentered(pctStr,    INNER_W, resultColor);
+
+    drawEmptyBoxLine(INNER_W);
+
+    if (pct >= 80) {
+        drawBoxLineCentered("Xuat sac! Tieng Anh cua ban tot day!", INNER_W, CLR_LIGHT_GREEN);
+    } else if (pct >= 50) {
+        drawBoxLineCentered("Kha tot! Can luyen them!", INNER_W, CLR_LIGHT_YELLOW);
+    } else {
+        drawBoxLineCentered("Can on tap va nho chinh ta!", INNER_W, CLR_LIGHT_RED);
+    }
+
+    drawEmptyBoxLine(INNER_W);
+    drawBottomBorder(INNER_W);
+
+    // Luu vao lich su
+    string dateStr = getCurrentDate();
+    addHistory(history, dateStr, selectedName + " (Viet TA)", correctCount, totalCards);
+    saveHistory("History.txt", history);
+
+    freeCardList(cards);
     pauseScreen();
   } // end while
 }

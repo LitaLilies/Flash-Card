@@ -1,0 +1,16 @@
+hello|xin chào
+goodbye|tạm biệt
+love you|yêu bạn
+friends|các bạn
+darling|em yêu
+morning|buổi sáng
+afternoon|buổi chiều
+evening|buổi tối
+night|đêm
+thank you|cảm ơn
+welcome|chào mừng
+please|làm ơn
+sorry|xin lỗi
+family|gia đình
+mother|mẹ
+father|bố

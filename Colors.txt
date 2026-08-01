@@ -1,0 +1,14 @@
+red|đỏ
+blue|xanh dương
+green|xanh lá
+yellow|vàng
+black|đen
+white|trắng
+orange|cam
+purple|tím
+pink|hồng
+brown|nâu
+gray|xám
+gold|vàng kim
+silver|bạc
+rainbow|cầu vồng

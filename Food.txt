@@ -1,0 +1,14 @@
+rice|cơm
+bread|bánh mì
+noodles|mì
+chicken|gà
+fish|cá
+beef|thịt bò
+pork|thịt lợn
+egg|trứng
+vegetable|rau
+fruit|trái cây
+soup|súp
+salad|salad
+pizza|pizza
+burger|bánh hamburger
