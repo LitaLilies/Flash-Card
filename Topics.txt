@@ -1,5 +1,3 @@
-A1
-A2
 Animals
 Colors
 Drink

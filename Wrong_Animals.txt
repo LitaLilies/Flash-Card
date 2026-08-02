@@ -1,11 +1,8 @@
+chicken|gà
 fish|cá
 elephant|voi
-tiger|hổ
-lion|sư tử
 bear|gấu
-monkey|khỉ
-rabbit|thỏ
+cat|mèo
+bird|chim
 horse|ngựa
-cow|bò
 pig|lợn
-chicken|gà

@@ -120,7 +120,7 @@ void initConsole() {
 #ifdef _WIN32
     SetConsoleOutputCP(65001);
     SetConsoleCP(65001);
-    SetConsoleTitleA("Flash Card - Hoc Tu Vung Tieng Anh");
+    SetConsoleTitleA("Flash Card - Học Từ Vựng Tiếng Anh");
 
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
     CONSOLE_CURSOR_INFO cursorInfo;
@@ -255,7 +255,7 @@ void drawTitle() {
     drawTopBorder(INNER_W);
     drawEmptyBoxLine(INNER_W);
     drawBoxLineCentered("FLASH CARD", INNER_W, CLR_LIGHT_YELLOW);
-    drawBoxLineCentered("Chuong Trinh Hoc Tu Vung Tieng Anh", INNER_W, CLR_YELLOW);
+    drawBoxLineCentered("Chương Trình Học Từ Vựng Tiếng Anh", INNER_W, CLR_YELLOW);
     drawEmptyBoxLine(INNER_W);
 }
 
@@ -309,7 +309,7 @@ void pauseScreen() {
     cout << "\n";
     setColor(CLR_GRAY);
     leftPad();
-    cout << "  Nhan phim bat ky de tiep tuc...";
+    cout << "  Nhấn phím bất kỳ để tiếp tục...";
     resetColor();
     _getch();
 }
@@ -329,7 +329,7 @@ void showMessage(const string& msg, int color) {
 int selectTopic(TopicNode* root, string& selectedName) {
     int n = countTopics(root);
     if (n == 0) {
-        showMessage("[!] Chua co chu de nao. Hay tao chu de truoc!", CLR_LIGHT_RED);
+        showMessage("[!] Chưa có chủ đề nào. Hãy tạo chủ đề trước!", CLR_LIGHT_RED);
         pauseScreen();
         return -1;
     }
@@ -339,7 +339,7 @@ int selectTopic(TopicNode* root, string& selectedName) {
     inorderTopics(root, names, cnt);
 
     drawMidBorder(INNER_W);
-    drawBoxLineCentered("DANH SACH CHU DE", INNER_W, CLR_LIGHT_YELLOW);
+    drawBoxLineCentered("DANH SÁCH CHỦ ĐỀ", INNER_W, CLR_LIGHT_YELLOW);
     drawThinSeparator(INNER_W);
 
     for (int i = 0; i < cnt; i++) {
@@ -350,7 +350,7 @@ int selectTopic(TopicNode* root, string& selectedName) {
     drawBottomBorder(INNER_W);
 
     cout << "\n";
-    int choice = inputChoice("Chon chu de (1-" + to_string(cnt) + ", 0 = Quay lai): ");
+    int choice = inputChoice("Chọn chủ đề (1-" + to_string(cnt) + ", 0 = Quay lại): ");
 
     if (choice >= 1 && choice <= cnt) {
         selectedName = names[choice - 1];
@@ -371,21 +371,21 @@ void showMainMenu(TopicNode*& root, HistoryList& history) {
         drawTitle();
         drawMidBorder(INNER_W);
         drawEmptyBoxLine(INNER_W);
-        drawBoxLine("  [1]  Quan ly chu de (Deck)", INNER_W, CLR_BRIGHT_WHITE);
-        drawBoxLine("  [2]  Hoc Flash Card",        INNER_W, CLR_BRIGHT_WHITE);
-        drawBoxLine("  [3]  Kiem tra",               INNER_W, CLR_BRIGHT_WHITE);
-        drawBoxLine("  [4]  On tap",                 INNER_W, CLR_BRIGHT_WHITE);
-        drawBoxLine("  [5]  Lich su ket qua",        INNER_W, CLR_BRIGHT_WHITE);
+        drawBoxLine("  [1]  Quản lý chủ đề (Deck)", INNER_W, CLR_BRIGHT_WHITE);
+        drawBoxLine("  [2]  Học Flash Card",        INNER_W, CLR_BRIGHT_WHITE);
+        drawBoxLine("  [3]  Kiểm tra",               INNER_W, CLR_BRIGHT_WHITE);
+        drawBoxLine("  [4]  Ôn tập",                 INNER_W, CLR_BRIGHT_WHITE);
+        drawBoxLine("  [5]  Lịch sử kết quả",        INNER_W, CLR_BRIGHT_WHITE);
         drawEmptyBoxLine(INNER_W);
-        drawBoxLine("  [6]  Tro choi Noi tu",        INNER_W, CLR_LIGHT_CYAN);
-        drawBoxLine("  [7]  Tro choi Viet tieng Anh", INNER_W, CLR_LIGHT_CYAN);
+        drawBoxLine("  [6]  Trò chơi Nối từ",        INNER_W, CLR_LIGHT_CYAN);
+        drawBoxLine("  [7]  Trò chơi Viết tiếng Anh", INNER_W, CLR_LIGHT_CYAN);
         drawEmptyBoxLine(INNER_W);
-        drawBoxLine("  [0]  Thoat",                  INNER_W, CLR_GRAY);
+        drawBoxLine("  [0]  Thoát",                  INNER_W, CLR_GRAY);
         drawEmptyBoxLine(INNER_W);
         drawBottomBorder(INNER_W);
         cout << "\n";
 
-        int choice = inputChoice("Nhap lua chon cua ban: ");
+        int choice = inputChoice("Nhập lựa chọn của bạn: ");
 
         switch (choice) {
             case 1: menuDeckManagement(root); break;
@@ -402,8 +402,8 @@ void showMainMenu(TopicNode*& root, HistoryList& history) {
                 clearScreen();
                 drawTopBorder(INNER_W);
                 drawEmptyBoxLine(INNER_W);
-                drawBoxLineCentered("Cam on ban da su dung Flash Card!", INNER_W, CLR_LIGHT_GREEN);
-                drawBoxLineCentered("Hen gap lai!", INNER_W, CLR_YELLOW);
+                drawBoxLineCentered("Cảm ơn bạn đã sử dụng Flash Card!", INNER_W, CLR_LIGHT_GREEN);
+                drawBoxLineCentered("Hẹn gặp lại!", INNER_W, CLR_YELLOW);
                 drawEmptyBoxLine(INNER_W);
                 drawBottomBorder(INNER_W);
                 cout << "\n";
@@ -411,7 +411,7 @@ void showMainMenu(TopicNode*& root, HistoryList& history) {
                 showCursor();
                 return;
             default:
-                showMessage("[!] Lua chon khong hop le!", CLR_LIGHT_RED);
+                showMessage("[!] Lựa chọn không hợp lệ!", CLR_LIGHT_RED);
                 pauseScreen();
                 break;
         }
@@ -427,20 +427,20 @@ void menuDeckManagement(TopicNode*& root) {
         clearScreen();
         drawTitle();
         drawMidBorder(INNER_W);
-        drawBoxLineCentered("QUAN LY CHU DE", INNER_W, CLR_LIGHT_CYAN);
+        drawBoxLineCentered("QUẢN LÝ CHỦ ĐỀ", INNER_W, CLR_LIGHT_CYAN);
         drawThinSeparator(INNER_W);
         drawEmptyBoxLine(INNER_W);
-        drawBoxLine("  [1]  Tao chu de moi",      INNER_W, CLR_BRIGHT_WHITE);
-        drawBoxLine("  [2]  Doi ten chu de",       INNER_W, CLR_BRIGHT_WHITE);
-        drawBoxLine("  [3]  Quan ly Flash Card",   INNER_W, CLR_BRIGHT_WHITE);
-        drawBoxLine("  [4]  Xoa chu de",           INNER_W, CLR_BRIGHT_WHITE);
+        drawBoxLine("  [1]  Tạo chủ đề mới",      INNER_W, CLR_BRIGHT_WHITE);
+        drawBoxLine("  [2]  Đổi tên chủ đề",       INNER_W, CLR_BRIGHT_WHITE);
+        drawBoxLine("  [3]  Quản lý Flash Card",   INNER_W, CLR_BRIGHT_WHITE);
+        drawBoxLine("  [4]  Xóa chủ đề",           INNER_W, CLR_BRIGHT_WHITE);
         drawEmptyBoxLine(INNER_W);
-        drawBoxLine("  [0]  Quay lai",             INNER_W, CLR_GRAY);
+        drawBoxLine("  [0]  Quay lại",             INNER_W, CLR_GRAY);
         drawEmptyBoxLine(INNER_W);
         drawBottomBorder(INNER_W);
         cout << "\n";
 
-        int choice = inputChoice("Nhap lua chon: ");
+        int choice = inputChoice("Nhập lựa chọn: ");
 
         switch (choice) {
             case 1: createDeck(root);      break;
@@ -449,7 +449,7 @@ void menuDeckManagement(TopicNode*& root) {
             case 4: deleteDeckMenu(root);  break;
             case 0: return;
             default:
-                showMessage("[!] Lua chon khong hop le!", CLR_LIGHT_RED);
+                showMessage("[!] Lựa chọn không hợp lệ!", CLR_LIGHT_RED);
                 pauseScreen();
                 break;
         }
@@ -462,29 +462,29 @@ void createDeck(TopicNode*& root) {
     clearScreen();
     drawTitle();
     drawMidBorder(INNER_W);
-    drawBoxLineCentered("TAO CHU DE MOI", INNER_W, CLR_LIGHT_CYAN);
+    drawBoxLineCentered("TẠO CHỦ ĐỀ MỚI", INNER_W, CLR_LIGHT_CYAN);
     drawEmptyBoxLine(INNER_W);
     drawBottomBorder(INNER_W);
     cout << "\n";
 
-    string name = inputString("Nhap ten chu de (0 = Quay lai): ");
+    string name = inputString("Nhập tên chủ đề (0 = Quay lại): ");
 
     if (name == "0") return;
 
     if (name.empty()) {
-        showMessage("[!] Ten chu de khong duoc de trong!", CLR_LIGHT_RED);
+        showMessage("[!] Tên chủ đề không được để trống!", CLR_LIGHT_RED);
         pauseScreen();
         return;
     }
 
     if (!isValidTopicName(name)) {
-        showMessage("[!] Ten chu de chua ky tu khong hop le!", CLR_LIGHT_RED);
+        showMessage("[!] Tên chủ đề chứa ký tự không hợp lệ!", CLR_LIGHT_RED);
         pauseScreen();
         return;
     }
 
     if (searchTopic(root, name) != nullptr) {
-        showMessage("[!] Chu de da ton tai!", CLR_LIGHT_RED);
+        showMessage("[!] Chủ đề đã tồn tại!", CLR_LIGHT_RED);
         pauseScreen();
         return;
     }
@@ -497,11 +497,11 @@ void createDeck(TopicNode*& root) {
     f.close();
 
     saveTopics("Topics.txt", root);
-    showMessage("[OK] Da tao chu de: " + name, CLR_LIGHT_GREEN);
+    showMessage("[OK] Đã tạo chủ đề: " + name, CLR_LIGHT_GREEN);
 
     // Hoi them Flash Card ngay
     cout << "\n";
-    int ans = inputChoice("Ban co muon them Flash Card ngay? (1 = Co, 0 = Khong): ");
+    int ans = inputChoice("Bạn có muốn thêm Flash Card ngay? (1 = Có, 0 = Không): ");
     if (ans == 1) {
         addCardsFlow(name);
     }
@@ -517,26 +517,26 @@ void addCardsFlow(const string& topicName) {
     cout << "\n";
     setColor(CLR_LIGHT_CYAN);
     leftPad();
-    cout << "  Nhap Flash Card (nhap 0 de ket thuc):\n";
+    cout << "  Nhập Flash Card (nhập 0 để kết thúc):\n";
     resetColor();
 
     while (true) {
         cout << "\n";
-        string eng = inputString("  Tu tieng Anh (0 = Xong): ");
+        string eng = inputString("  Từ tiếng Anh (0 = Xong): ");
         if (eng == "0" || eng.empty()) break;
 
-        string vie = inputString("  Nghia tieng Viet: ");
+        string vie = inputString("  Nghĩa tiếng Việt: ");
         if (vie == "0" || vie.empty()) {
-            showMessage("[!] Nghia tieng Viet khong duoc de trong!", CLR_LIGHT_RED);
+            showMessage("[!] Nghĩa tiếng Việt không được để trống!", CLR_LIGHT_RED);
             continue;
         }
 
         addCard(cards, eng, vie);
-        showMessage("  [+] Da them: " + eng + " - " + vie, CLR_GREEN);
+        showMessage("  [+] Đã thêm: " + eng + " - " + vie, CLR_GREEN);
     }
 
     saveCards(getCardFileName(topicName), cards);
-    showMessage("[OK] Da luu " + to_string(cards.count) + " Flash Card.", CLR_LIGHT_GREEN);
+    showMessage("[OK] Đã lưu " + to_string(cards.count) + " Flash Card.", CLR_LIGHT_GREEN);
     freeCardList(cards);
     pauseScreen();
 }
@@ -547,7 +547,7 @@ void renameDeck(TopicNode*& root) {
     clearScreen();
     drawTitle();
     drawMidBorder(INNER_W);
-    drawBoxLineCentered("DOI TEN CHU DE", INNER_W, CLR_LIGHT_CYAN);
+    drawBoxLineCentered("ĐỔI TÊN CHỦ ĐỀ", INNER_W, CLR_LIGHT_CYAN);
     drawEmptyBoxLine(INNER_W);
     drawBottomBorder(INNER_W);
 
@@ -560,19 +560,19 @@ void renameDeck(TopicNode*& root) {
     cout << "\n";
     setColor(CLR_YELLOW);
     leftPad();
-    cout << "  Chu de hien tai: " << selectedName << "\n";
+    cout << "  Chủ đề hiện tại: " << selectedName << "\n";
     resetColor();
 
-    string newName = inputString("Nhap ten moi: ");
+    string newName = inputString("Nhập tên mới: ");
 
     if (newName.empty() || !isValidTopicName(newName)) {
-        showMessage("[!] Ten moi khong hop le!", CLR_LIGHT_RED);
+        showMessage("[!] Tên mới không hợp lệ!", CLR_LIGHT_RED);
         pauseScreen();
         return;
     }
 
     if (searchTopic(root, newName) != nullptr) {
-        showMessage("[!] Ten chu de da ton tai!", CLR_LIGHT_RED);
+        showMessage("[!] Tên chủ đề đã tồn tại!", CLR_LIGHT_RED);
         pauseScreen();
         return;
     }
@@ -591,7 +591,7 @@ void renameDeck(TopicNode*& root) {
     root = insertTopic(root, newName);
     saveTopics("Topics.txt", root);
 
-    showMessage("[OK] Da doi ten: " + selectedName + " -> " + newName, CLR_LIGHT_GREEN);
+    showMessage("[OK] Đã đổi tên: " + selectedName + " -> " + newName, CLR_LIGHT_GREEN);
     pauseScreen();
 }
 
@@ -622,10 +622,10 @@ static void printCardRow(int idx, const string& eng, const string& vie) {
 // Hien thi danh sach the theo thu tu goc (thu tu nhap vao)
 static void displayCardList(CardList& cards) {
     if (cards.count == 0) {
-        drawBoxLineCentered("(Chua co Flash Card nao)", INNER_W, CLR_GRAY);
+        drawBoxLineCentered("(Chưa có Flash Card nào)", INNER_W, CLR_GRAY);
         return;
     }
-    string header = "  STT | Tieng Anh              | Tieng Viet";
+    string header = "  STT | Tiếng Anh              | Tiếng Việt";
     drawBoxLine(header, INNER_W, CLR_LIGHT_YELLOW);
     drawThinSeparator(INNER_W);
     CardNode* curr = cards.head;
@@ -636,14 +636,14 @@ static void displayCardList(CardList& cards) {
 // Hien thi danh sach the da duoc QUICK SORT theo ten tieng Anh A->Z
 static void displaySortedCardList(CardList& cards) {
     if (cards.count == 0) {
-        drawBoxLineCentered("(Chua co Flash Card nao)", INNER_W, CLR_GRAY);
+        drawBoxLineCentered("(Chưa có Flash Card nào)", INNER_W, CLR_GRAY);
         return;
     }
     // --- AP DUNG QUICK SORT ---
     CardNode** arr = cardListToSortedArray(cards);   // O(n log n)
 
-    drawBoxLineCentered("(Sap xep A->Z bang Quick Sort)", INNER_W, CLR_LIGHT_CYAN);
-    string header = "  STT | Tieng Anh              | Tieng Viet";
+    drawBoxLineCentered("(Sắp xếp A->Z bằng Quick Sort)", INNER_W, CLR_LIGHT_CYAN);
+    string header = "  STT | Tiếng Anh              | Tiếng Việt";
     drawBoxLine(header, INNER_W, CLR_LIGHT_YELLOW);
     drawThinSeparator(INNER_W);
     for (int i = 0; i < cards.count; i++)
@@ -663,8 +663,8 @@ void manageCards(TopicNode* root) {
         clearScreen();
         drawTitle();
         drawMidBorder(INNER_W);
-        drawBoxLineCentered("QUAN LY FLASH CARD", INNER_W, CLR_LIGHT_CYAN);
-        drawBoxLineCentered("Chu de: " + selectedName, INNER_W, CLR_YELLOW);
+        drawBoxLineCentered("QUẢN LÝ FLASH CARD", INNER_W, CLR_LIGHT_CYAN);
+        drawBoxLineCentered("Chủ đề: " + selectedName, INNER_W, CLR_YELLOW);
         drawThinSeparator(INNER_W);
 
         // Load va hien thi danh sach
@@ -675,13 +675,13 @@ void manageCards(TopicNode* root) {
         displayCardList(cards);
 
         drawEmptyBoxLine(INNER_W);
-        drawBoxLine("  [1] Them  [2] Sua  [3] Xoa  [4] Xem the  [0] Quay lai", INNER_W, CLR_LIGHT_GREEN);
-        drawBoxLine("  [5] Sap xep A->Z (Quick Sort)", INNER_W, CLR_LIGHT_CYAN);
+        drawBoxLine("  [1] Thêm  [2] Sửa  [3] Xóa  [4] Xem thẻ  [0] Quay lại", INNER_W, CLR_LIGHT_GREEN);
+        drawBoxLine("  [5] Sắp xếp A->Z (Quick Sort)", INNER_W, CLR_LIGHT_CYAN);
         drawEmptyBoxLine(INNER_W);
         drawBottomBorder(INNER_W);
         cout << "\n";
 
-        int choice = inputChoice("Nhap lua chon: ");
+        int choice = inputChoice("Nhập lựa chọn: ");
 
         if (choice == 0) {
             freeCardList(cards);
@@ -693,13 +693,13 @@ void manageCards(TopicNode* root) {
             clearScreen();
             drawTitle();
             drawMidBorder(INNER_W);
-            drawBoxLineCentered("SAP XEP FLASH CARD - QUICK SORT", INNER_W, CLR_LIGHT_CYAN);
-            drawBoxLineCentered("Chu de: " + selectedName, INNER_W, CLR_YELLOW);
+            drawBoxLineCentered("SẮP XẾPH FLASH CARD - QUICK SORT", INNER_W, CLR_LIGHT_CYAN);
+            drawBoxLineCentered("Chủ đề: " + selectedName, INNER_W, CLR_YELLOW);
             drawThinSeparator(INNER_W);
             displaySortedCardList(cards);
             drawEmptyBoxLine(INNER_W);
             drawBottomBorder(INNER_W);
-            showMessage("[i] Quick Sort A->Z hoan tat! (Thu tu goc khong thay doi)", CLR_LIGHT_CYAN);
+            showMessage("[i] Quick Sort A->Z hoàn tất! (Thứ tự gốc không thay đổi)", CLR_LIGHT_CYAN);
             freeCardList(cards);
             pauseScreen();
             continue;
@@ -708,7 +708,7 @@ void manageCards(TopicNode* root) {
         if (choice == 4) {
             // Xem the - duyet toi/lui su dung DSLK kep (prev/next)
             if (cards.count == 0) {
-                showMessage("[!] Khong co the nao de xem!", CLR_LIGHT_RED);
+                showMessage("[!] Không có thẻ nào để xem!", CLR_LIGHT_RED);
             } else {
                 CardNode* current = cards.head;
                 int pos = 1;
@@ -717,7 +717,7 @@ void manageCards(TopicNode* root) {
                     clearScreen();
                     drawTopBorder(INNER_W);
                     drawEmptyBoxLine(INNER_W);
-                    string info = "XEM THE  [" + to_string(pos) + "/" + to_string(cards.count) + "]";
+                    string info = "XEM THẺ  [" + to_string(pos) + "/" + to_string(cards.count) + "]";
                     drawBoxLineCentered(info, INNER_W, CLR_LIGHT_YELLOW);
                     drawEmptyBoxLine(INNER_W);
                     drawThinSeparator(INNER_W);
@@ -730,9 +730,9 @@ void manageCards(TopicNode* root) {
                     drawEmptyBoxLine(INNER_W);
                     drawMidBorder(INNER_W);
                     string nav = "";
-                    if (current->prev) nav += "[<-] Lui  ";
-                    if (current->next) nav += "[->] Toi  ";
-                    nav += "[ESC] Thoat";
+                    if (current->prev) nav += "[<-] Lùi  ";
+                    if (current->next) nav += "[->] Tới  ";
+                    nav += "[ESC] Thoát";
                     drawBoxLineCentered(nav, INNER_W, CLR_LIGHT_CYAN);
                     drawBottomBorder(INNER_W);
 
@@ -762,31 +762,31 @@ void manageCards(TopicNode* root) {
         else if (choice == 2) {
             // Sua
             if (cards.count == 0) {
-                showMessage("[!] Khong co the nao de sua!", CLR_LIGHT_RED);
+                showMessage("[!] Không có thẻ nào để sửa!", CLR_LIGHT_RED);
                 freeCardList(cards);
                 pauseScreen();
                 continue;
             }
-            int idx = inputChoice("Nhap STT can sua (1-" + to_string(cards.count) + "): ");
+            int idx = inputChoice("Nhập STT cần sửa (1-" + to_string(cards.count) + "): ");
             CardNode* node = getCard(cards, idx);
             if (node == nullptr) {
-                showMessage("[!] STT khong hop le!", CLR_LIGHT_RED);
+                showMessage("[!] STT không hợp lệ!", CLR_LIGHT_RED);
             } else {
                 cout << "\n";
                 setColor(CLR_YELLOW);
                 leftPad();
-                cout << "  Hien tai: " << node->english << " - " << node->vietnamese << "\n";
+                cout << "  Hiện tại: " << node->english << " - " << node->vietnamese << "\n";
                 resetColor();
 
-                string newEng = inputString("  Tu tieng Anh moi: ");
-                string newVie = inputString("  Nghia tieng Viet moi: ");
+                string newEng = inputString("  Từ tiếng Anh mới: ");
+                string newVie = inputString("  Nghĩa tiếng Việt mới: ");
 
                 if (!newEng.empty() && !newVie.empty()) {
                     editCard(cards, idx, newEng, newVie);
                     saveCards(getCardFileName(selectedName), cards);
-                    showMessage("[OK] Da cap nhat Flash Card!", CLR_LIGHT_GREEN);
+                    showMessage("[OK] Đã cập nhật Flash Card!", CLR_LIGHT_GREEN);
                 } else {
-                    showMessage("[!] Khong duoc de trong!", CLR_LIGHT_RED);
+                    showMessage("[!] Không được để trống!", CLR_LIGHT_RED);
                 }
             }
             freeCardList(cards);
@@ -795,23 +795,23 @@ void manageCards(TopicNode* root) {
         else if (choice == 3) {
             // Xoa
             if (cards.count == 0) {
-                showMessage("[!] Khong co the nao de xoa!", CLR_LIGHT_RED);
+                showMessage("[!] Không có thẻ nào để xóa!", CLR_LIGHT_RED);
                 freeCardList(cards);
                 pauseScreen();
                 continue;
             }
-            int idx = inputChoice("Nhap STT can xoa (1-" + to_string(cards.count) + "): ");
+            int idx = inputChoice("Nhập STT cần xóa (1-" + to_string(cards.count) + "): ");
             CardNode* node = getCard(cards, idx);
             if (node == nullptr) {
-                showMessage("[!] STT khong hop le!", CLR_LIGHT_RED);
+                showMessage("[!] STT không hợp lệ!", CLR_LIGHT_RED);
             } else {
                 cout << "\n";
                 setColor(CLR_YELLOW);
                 leftPad();
-                cout << "  Se xoa: " << node->english << " - " << node->vietnamese << "\n";
+                cout << "  Sẽ xóa: " << node->english << " - " << node->vietnamese << "\n";
                 resetColor();
 
-                int confirm = inputChoice("  Xac nhan xoa? (1 = Co, 0 = Khong): ");
+                int confirm = inputChoice("  Xác nhận xóa? (1 = Có, 0 = Không): ");
                 if (confirm == 1) {
                     // Xoa tu tuong ung khoi file on tap
                     string engToDelete = node->english;
@@ -836,9 +836,9 @@ void manageCards(TopicNode* root) {
 
                     deleteCard(cards, idx);
                     saveCards(getCardFileName(selectedName), cards);
-                    showMessage("[OK] Da xoa Flash Card!", CLR_LIGHT_GREEN);
+                    showMessage("[OK] Đã xóa Flash Card!", CLR_LIGHT_GREEN);
                 } else {
-                    showMessage("[i] Da huy xoa.", CLR_GRAY);
+                    showMessage("[i] Đã hủy xóa.", CLR_GRAY);
                 }
             }
             freeCardList(cards);
@@ -846,7 +846,7 @@ void manageCards(TopicNode* root) {
         }
         else {
             freeCardList(cards);
-            showMessage("[!] Lua chon khong hop le!", CLR_LIGHT_RED);
+            showMessage("[!] Lựa chọn không hợp lệ!", CLR_LIGHT_RED);
             pauseScreen();
         }
     }
@@ -865,12 +865,12 @@ void deleteDeckMenu(TopicNode*& root) {
     cout << "\n";
     setColor(CLR_LIGHT_RED);
     leftPad();
-    cout << "  CANH BAO: Se xoa chu de \"" << selectedName << "\" va tat ca du lieu lien quan!\n";
+    cout << "  CẢNH BÁO: Sẽ xóa chủ đề \"" << selectedName << "\" và tất cả dữ liệu liên quan!\n";
     resetColor();
 
-    int confirm = inputChoice("Xac nhan xoa? (1 = Co, 0 = Khong): ");
+    int confirm = inputChoice("Xác nhận xóa? (1 = Có, 0 = Không): ");
     if (confirm != 1) {
-        showMessage("[i] Da huy xoa.", CLR_GRAY);
+        showMessage("[i] Đã hủy xóa.", CLR_GRAY);
         pauseScreen();
         return;
     }
@@ -883,7 +883,7 @@ void deleteDeckMenu(TopicNode*& root) {
     root = deleteTopic(root, selectedName);
     saveTopics("Topics.txt", root);
 
-    showMessage("[OK] Da xoa chu de: " + selectedName, CLR_LIGHT_GREEN);
+    showMessage("[OK] Đã xóa chủ đề: " + selectedName, CLR_LIGHT_GREEN);
     pauseScreen();
 }
 
@@ -922,7 +922,7 @@ static void drawFlashCardUI(const string& title, int current, int total,
         drawEmptyBoxLine(INNER_W);
     } else {
         drawEmptyBoxLine(INNER_W);
-        drawBoxLineCentered("[Nhan ENTER de lat the]", INNER_W, CLR_GRAY);
+        drawBoxLineCentered("[Nhấn ENTER để lật thẻ]", INNER_W, CLR_GRAY);
         drawEmptyBoxLine(INNER_W);
     }
 
@@ -943,7 +943,7 @@ void menuLearnFlashCard(TopicNode* root) {
     loadCards(getCardFileName(selectedName), cards);
 
     if (cards.count == 0) {
-        showMessage("[!] Chu de nay chua co Flash Card nao!", CLR_LIGHT_RED);
+        showMessage("[!] Chủ đề này chưa có Flash Card nào!", CLR_LIGHT_RED);
         freeCardList(cards);
         pauseScreen();
         return;
@@ -970,23 +970,23 @@ void menuLearnFlashCard(TopicNode* root) {
         cardNum++;
 
         // Hien thi mat truoc
-        drawFlashCardUI("HOC FLASH CARD - " + selectedName,
+        drawFlashCardUI("HỌC FLASH CARD - " + selectedName,
                         cardNum, totalCards,
                         qn->english, qn->vietnamese, false);
         drawBottomBorder(INNER_W);
         _getch(); // Doi nhan phim de lat the
 
         // Hien thi ca 2 mat
-        drawFlashCardUI("HOC FLASH CARD - " + selectedName,
+        drawFlashCardUI("HỌC FLASH CARD - " + selectedName,
                         cardNum, totalCards,
                         qn->english, qn->vietnamese, true);
 
         drawMidBorder(INNER_W);
-        drawBoxLine("  [1] Nho     [2] Chua nho     [0] Thoat", INNER_W, CLR_LIGHT_CYAN);
+        drawBoxLine("  [1] Nhớ     [2] Chưa nhớ     [0] Thoát", INNER_W, CLR_LIGHT_CYAN);
         drawBottomBorder(INNER_W);
         cout << "\n";
 
-        int choice = inputChoice("Lua chon cua ban: ");
+        int choice = inputChoice("Lựa chọn của bạn: ");
 
         if (choice == 0) {
             // Thoat - luu cac the con lai trong queue vao wrong
@@ -1037,10 +1037,10 @@ void menuLearnFlashCard(TopicNode* root) {
         saveCards(getWrongFileName(selectedName), existingWrong);
         freeCardList(existingWrong);
 
-        showMessage("[i] Co " + to_string(wrongCards.count) + " tu chua nho da luu vao on tap.",
+        showMessage("[i] Có " + to_string(wrongCards.count) + " từ chưa nhớ đã lưu vào ôn tập.",
                     CLR_LIGHT_YELLOW);
     } else {
-        showMessage("[OK] Tuyet voi! Ban da nho tat ca tu vung!", CLR_LIGHT_GREEN);
+        showMessage("[OK] Tuyệt vời! Bạn đã nhớ tất cả từ vựng!", CLR_LIGHT_GREEN);
     }
 
     freeCardList(wrongCards);
@@ -1068,7 +1068,7 @@ void menuQuiz(TopicNode* root, HistoryList& history) {
     loadCards(getCardFileName(selectedName), cards);
 
     if (cards.count == 0) {
-        showMessage("[!] Chu de nay chua co Flash Card nao!", CLR_LIGHT_RED);
+        showMessage("[!] Chủ đề này chưa có Flash Card nào!", CLR_LIGHT_RED);
         freeCardList(cards);
         pauseScreen();
         return;
@@ -1091,7 +1091,7 @@ void menuQuiz(TopicNode* root, HistoryList& history) {
         drawTopBorder(INNER_W);
         drawEmptyBoxLine(INNER_W);
 
-        string info = "KIEM TRA - " + selectedName + "  [" + to_string(idx) + "/" + to_string(totalCards) + "]";
+        string info = "KIỂM TRA - " + selectedName + "  [" + to_string(idx) + "/" + to_string(totalCards) + "]";
         drawBoxLineCentered(info, INNER_W, CLR_LIGHT_YELLOW);
 
         drawEmptyBoxLine(INNER_W);
@@ -1102,7 +1102,7 @@ void menuQuiz(TopicNode* root, HistoryList& history) {
         drawBottomBorder(INNER_W);
 
         cout << "\n";
-        string answer = inputString("Nhap nghia tieng Viet (0 = Thoat): ");
+        string answer = inputString("Nhập nghĩa tiếng Việt (0 = Thoát): ");
 
         if (answer == "0") {
             // Thoat giua chung - tinh so cau da lam
@@ -1114,11 +1114,11 @@ void menuQuiz(TopicNode* root, HistoryList& history) {
         if (compareAnswerFlexible(answer, curr->vietnamese)) {
             correctCount++;
             string feedback = getCorrectFeedback();
-            showMessage("[OK] DUNG ROI! " + feedback, CLR_LIGHT_GREEN);
+            showMessage("[OK] ĐÚNG RỒI! " + feedback, CLR_LIGHT_GREEN);
         } else {
             string feedback = getWrongFeedback();
             showMessage("[X] SAI! " + feedback, CLR_LIGHT_RED);
-            showMessage("     Dap an dung: " + curr->vietnamese, CLR_YELLOW);
+            showMessage("     Đáp án đúng: " + curr->vietnamese, CLR_YELLOW);
             addCard(wrongCards, curr->english, curr->vietnamese);
         }
 
@@ -1127,7 +1127,7 @@ void menuQuiz(TopicNode* root, HistoryList& history) {
     }
 
     if (quitted && totalCards == 0) {
-        showMessage("[i] Da thoat kiem tra.", CLR_GRAY);
+        showMessage("[i] Đã thoát kiểm tra.", CLR_GRAY);
         freeCardList(wrongCards);
         freeCardList(cards);
         pauseScreen();
@@ -1138,15 +1138,15 @@ void menuQuiz(TopicNode* root, HistoryList& history) {
     clearScreen();
     drawTopBorder(INNER_W);
     drawEmptyBoxLine(INNER_W);
-    drawBoxLineCentered("KET QUA KIEM TRA", INNER_W, CLR_LIGHT_YELLOW);
-    drawBoxLineCentered("Chu de: " + selectedName, INNER_W, CLR_YELLOW);
+    drawBoxLineCentered("KẾT QUẢ KIỂM TRA", INNER_W, CLR_LIGHT_YELLOW);
+    drawBoxLineCentered("Chủ đề: " + selectedName, INNER_W, CLR_YELLOW);
     drawEmptyBoxLine(INNER_W);
     drawThinSeparator(INNER_W);
     drawEmptyBoxLine(INNER_W);
 
-    string resultStr = "Diem: " + to_string(correctCount) + " / " + to_string(totalCards);
+    string resultStr = "Điểm: " + to_string(correctCount) + " / " + to_string(totalCards);
     int pct = (totalCards > 0) ? (correctCount * 100 / totalCards) : 0;
-    string pctStr = "Ty le dung: " + to_string(pct) + "%";
+    string pctStr = "Tỷ lệ đúng: " + to_string(pct) + "%";
 
     int resultColor = (pct >= 80) ? CLR_LIGHT_GREEN :
                       (pct >= 50) ? CLR_LIGHT_YELLOW : CLR_LIGHT_RED;
@@ -1157,11 +1157,11 @@ void menuQuiz(TopicNode* root, HistoryList& history) {
     drawEmptyBoxLine(INNER_W);
 
     if (pct >= 80) {
-        drawBoxLineCentered("Xuat sac!", INNER_W, CLR_LIGHT_GREEN);
+        drawBoxLineCentered("Xuất sắc!", INNER_W, CLR_LIGHT_GREEN);
     } else if (pct >= 50) {
-        drawBoxLineCentered("Kha tot! Can on tap them!", INNER_W, CLR_LIGHT_YELLOW);
+        drawBoxLineCentered("Khá tốt! Cần ôn tập thêm!", INNER_W, CLR_LIGHT_YELLOW);
     } else {
-        drawBoxLineCentered("Can co gang hon! Hay on tap lai!", INNER_W, CLR_LIGHT_RED);
+        drawBoxLineCentered("Cần cố gắng hơn! Hãy ôn tập lại!", INNER_W, CLR_LIGHT_RED);
     }
 
     drawEmptyBoxLine(INNER_W);
@@ -1223,7 +1223,7 @@ void menuReview(TopicNode* root) {
     loadCards(getWrongFileName(selectedName), wrongCards);
 
     if (wrongCards.count == 0) {
-        showMessage("[OK] Khong co tu nao can on tap! Ban da nho het roi!", CLR_LIGHT_GREEN);
+        showMessage("[OK] Không có từ nào cần ôn tập! Bạn đã nhớ hết rồi!", CLR_LIGHT_GREEN);
         freeCardList(wrongCards);
         pauseScreen();
         return;
@@ -1242,7 +1242,7 @@ void menuReview(TopicNode* root) {
     int rememberedCount = 0;
     int cardNum = 0;
 
-    showMessage("[i] Co " + to_string(totalReview) + " tu can on tap. Ban se hoc lai cho den khi nho het!",
+    showMessage("[i] Có " + to_string(totalReview) + " từ cần ôn tập. Bạn sẽ học lại cho đến khi nhớ hết!",
                 CLR_LIGHT_CYAN);
     pauseScreen();
 
@@ -1250,7 +1250,7 @@ void menuReview(TopicNode* root) {
         QueueNode* qn = dequeue(queue);
         cardNum++;
 
-        string info = "ON TAP - " + selectedName + "  [Da nho: " + to_string(rememberedCount) + "/" + to_string(totalReview) + "]";
+        string info = "ÔN TẬP - " + selectedName + "  [Đã nhớ: " + to_string(rememberedCount) + "/" + to_string(totalReview) + "]";
 
         // Hien thi mat truoc
         drawFlashCardUI(info, 0, 0,
@@ -1263,11 +1263,11 @@ void menuReview(TopicNode* root) {
                         qn->english, qn->vietnamese, true);
 
         drawMidBorder(INNER_W);
-        drawBoxLine("  [1] Da nho   [2] Chua nho   [0] Thoat", INNER_W, CLR_LIGHT_CYAN);
+        drawBoxLine("  [1] Đã nhớ   [2] Chưa nhớ   [0] Thoát", INNER_W, CLR_LIGHT_CYAN);
         drawBottomBorder(INNER_W);
         cout << "\n";
 
-        int choice = inputChoice("Lua chon cua ban: ");
+        int choice = inputChoice("Lựa chọn của bạn: ");
 
         if (choice == 0) {
             // Thoat - dua the hien tai va con lai tro lai
@@ -1279,14 +1279,14 @@ void menuReview(TopicNode* root) {
             // Da nho -> khong dua lai queue
             rememberedCount++;
             string feedback = getCorrectFeedback();
-            showMessage("[OK] " + feedback + " Da xoa khoi danh sach on tap!", CLR_LIGHT_GREEN);
+            showMessage("[OK] " + feedback + " Đã xóa khỏi danh sách ôn tập!", CLR_LIGHT_GREEN);
             Sleep(800);
         }
         else {
             // Chua nho -> dua lai cuoi queue
             enqueue(queue, qn->english, qn->vietnamese);
             string feedback = getWrongFeedback();
-            showMessage("[i] " + feedback + " The se quay lai sau!", CLR_LIGHT_YELLOW);
+            showMessage("[i] " + feedback + " Thẻ sẽ quay lại sau!", CLR_LIGHT_YELLOW);
             Sleep(800);
         }
 
@@ -1308,21 +1308,21 @@ void menuReview(TopicNode* root) {
     clearScreen();
     drawTopBorder(INNER_W);
     drawEmptyBoxLine(INNER_W);
-    drawBoxLineCentered("KET QUA ON TAP", INNER_W, CLR_LIGHT_YELLOW);
+    drawBoxLineCentered("KẾT QUẢ ÔN TẬP", INNER_W, CLR_LIGHT_YELLOW);
     drawEmptyBoxLine(INNER_W);
     drawThinSeparator(INNER_W);
     drawEmptyBoxLine(INNER_W);
-    drawBoxLineCentered("Da nho: " + to_string(rememberedCount) + " tu", INNER_W, CLR_LIGHT_GREEN);
-    drawBoxLineCentered("Con lai: " + to_string(remaining.count) + " tu can on tap", INNER_W,
+    drawBoxLineCentered("Đã nhớ: " + to_string(rememberedCount) + " từ", INNER_W, CLR_LIGHT_GREEN);
+    drawBoxLineCentered("Còn lại: " + to_string(remaining.count) + " từ cần ôn tập", INNER_W,
                         remaining.count > 0 ? CLR_LIGHT_YELLOW : CLR_LIGHT_GREEN);
     drawEmptyBoxLine(INNER_W);
 
     if (remaining.count == 0) {
-        drawBoxLineCentered("Tuyet voi! Ban da nho tat ca!", INNER_W, CLR_LIGHT_GREEN);
+        drawBoxLineCentered("Tuyệt vời! Bạn đã nhớ tất cả!", INNER_W, CLR_LIGHT_GREEN);
         // Xoa file on tap neu da nho het
         remove(getWrongFileName(selectedName).c_str());
     } else {
-        drawBoxLineCentered("Hay tiep tuc on tap!", INNER_W, CLR_LIGHT_YELLOW);
+        drawBoxLineCentered("Hãy tiếp tục ôn tập!", INNER_W, CLR_LIGHT_YELLOW);
     }
 
     drawEmptyBoxLine(INNER_W);
@@ -1344,12 +1344,12 @@ void menuHistory(HistoryList& history) {
     clearScreen();
     drawTitle();
     drawMidBorder(INNER_W);
-    drawBoxLineCentered("LICH SU KIEM TRA", INNER_W, CLR_LIGHT_YELLOW);
+    drawBoxLineCentered("LỊCH SỬ KIỂM TRA", INNER_W, CLR_LIGHT_YELLOW);
     drawThinSeparator(INNER_W);
 
     if (history.count == 0) {
         drawEmptyBoxLine(INNER_W);
-        drawBoxLineCentered("(Chua co lich su kiem tra nao)", INNER_W, CLR_GRAY);
+        drawBoxLineCentered("(Chưa có lịch sử kiểm tra nào)", INNER_W, CLR_GRAY);
         drawEmptyBoxLine(INNER_W);
         drawBottomBorder(INNER_W);
         pauseScreen();
@@ -1357,7 +1357,7 @@ void menuHistory(HistoryList& history) {
     }
 
     // Tieu de
-    string header = " STT | Ngay kiem tra     | Chu de         | Ket qua";
+    string header = " STT | Ngày kiểm tra     | Chủ đề         | Kết quả";
     drawBoxLine(header, INNER_W, CLR_LIGHT_CYAN);
     drawThinSeparator(INNER_W);
 
@@ -1393,13 +1393,13 @@ void menuHistory(HistoryList& history) {
     }
 
     drawEmptyBoxLine(INNER_W);
-    drawBoxLine("  [1] Xoa 1 muc  [2] Xoa toan bo  [0] Quay lai", INNER_W, CLR_LIGHT_GREEN);
-    drawBoxLine("  [3] Sap xep theo diem % (Merge Sort)", INNER_W, CLR_LIGHT_CYAN);
+    drawBoxLine("  [1] Xóa 1 mục  [2] Xóa toàn bộ  [0] Quay lại", INNER_W, CLR_LIGHT_GREEN);
+    drawBoxLine("  [3] Sắp xếp theo điểm % (Merge Sort)", INNER_W, CLR_LIGHT_CYAN);
     drawEmptyBoxLine(INNER_W);
     drawBottomBorder(INNER_W);
     cout << "\n";
 
-    int choice = inputChoice("Nhap lua chon: ");
+    int choice = inputChoice("Nhập lựa chọn: ");
 
     if (choice == 0) return;
 
@@ -1408,13 +1408,13 @@ void menuHistory(HistoryList& history) {
         clearScreen();
         drawTitle();
         drawMidBorder(INNER_W);
-        drawBoxLineCentered("LICH SU - SAP XEP THEO DIEM (MERGE SORT)", INNER_W, CLR_LIGHT_YELLOW);
-        drawBoxLineCentered("Giam dan: cao nhat -> thap nhat", INNER_W, CLR_LIGHT_CYAN);
+        drawBoxLineCentered("LỊCH SỬ - SẮP XẾPH THEO ĐIỂM (MERGE SORT)", INNER_W, CLR_LIGHT_YELLOW);
+        drawBoxLineCentered("Giảm dần: cao nhất -> thấp nhất", INNER_W, CLR_LIGHT_CYAN);
         drawThinSeparator(INNER_W);
 
         HistoryNode** arr = historyToSortedArray(history);   // O(n log n)
 
-        string header = " STT | Ngay kiem tra     | Chu de         | Ket qua";
+        string header = " STT | Ngày kiểm tra     | Chủ đề         | Kết quả";
         drawBoxLine(header, INNER_W, CLR_LIGHT_CYAN);
         drawThinSeparator(INNER_W);
 
@@ -1447,33 +1447,33 @@ void menuHistory(HistoryList& history) {
 
         drawEmptyBoxLine(INNER_W);
         drawBottomBorder(INNER_W);
-        showMessage("[i] Merge Sort hoan tat! Thu tu goc khong thay doi.", CLR_LIGHT_CYAN);
+        showMessage("[i] Merge Sort hoàn tất! Thứ tự gốc không thay đổi.", CLR_LIGHT_CYAN);
         pauseScreen();
     }
     else if (choice == 1) {
-        int delIdx = inputChoice("Nhap STT can xoa (1-" + to_string(history.count) + "): ");
+        int delIdx = inputChoice("Nhập STT cần xóa (1-" + to_string(history.count) + "): ");
         if (delIdx < 1 || delIdx > history.count) {
-            showMessage("[!] STT khong hop le!", CLR_LIGHT_RED);
+            showMessage("[!] STT không hợp lệ!", CLR_LIGHT_RED);
         } else {
             deleteHistory(history, delIdx);
             saveHistory("History.txt", history);
-            showMessage("[OK] Da xoa muc lich su!", CLR_LIGHT_GREEN);
+            showMessage("[OK] Đã xóa mục lịch sử!", CLR_LIGHT_GREEN);
         }
         pauseScreen();
     }
     else if (choice == 2) {
-        int confirm = inputChoice("Xac nhan xoa TOAN BO lich su? (1 = Co, 0 = Khong): ");
+        int confirm = inputChoice("Xác nhận xóa TOÀN BỘ lịch sử? (1 = Có, 0 = Không): ");
         if (confirm == 1) {
             clearHistory(history);
             saveHistory("History.txt", history);
-            showMessage("[OK] Da xoa toan bo lich su!", CLR_LIGHT_GREEN);
+            showMessage("[OK] Đã xóa toàn bộ lịch sử!", CLR_LIGHT_GREEN);
         } else {
-            showMessage("[i] Da huy.", CLR_GRAY);
+            showMessage("[i] Đã hủy.", CLR_GRAY);
         }
         pauseScreen();
     }
     else {
-        showMessage("[!] Lua chon khong hop le!", CLR_LIGHT_RED);
+        showMessage("[!] Lựa chọn không hợp lệ!", CLR_LIGHT_RED);
         pauseScreen();
     }
   } // end while
@@ -1498,7 +1498,7 @@ void menuWordMatching(TopicNode* root, HistoryList& history) {
     loadCards(getCardFileName(selectedName), cards);
 
     if (cards.count == 0) {
-        showMessage("[!] Chu de nay chua co Flash Card nao!", CLR_LIGHT_RED);
+        showMessage("[!] Chủ đề này chưa có Flash Card nào!", CLR_LIGHT_RED);
         freeCardList(cards);
         pauseScreen();
         return;
@@ -1506,7 +1506,7 @@ void menuWordMatching(TopicNode* root, HistoryList& history) {
 
     // Toi thieu 3 tu de choi
     if (cards.count < 3) {
-        showMessage("[!] Can it nhat 3 tu de choi tro noi tu!", CLR_LIGHT_RED);
+        showMessage("[!] Cần ít nhất 3 từ để chơi trò nối từ!", CLR_LIGHT_RED);
         freeCardList(cards);
         pauseScreen();
         return;
@@ -1554,7 +1554,7 @@ void menuWordMatching(TopicNode* root, HistoryList& history) {
             drawTopBorder(INNER_W);
             drawEmptyBoxLine(INNER_W);
             
-            string info = "TRO NOI TU - " + selectedName + "  [" + to_string(totalQuestions + 1) + "/" + to_string(cards.count) + "]";
+            string info = "TRÒ NỐI TỪ - " + selectedName + "  [" + to_string(totalQuestions + 1) + "/" + to_string(cards.count) + "]";
             drawBoxLineCentered(info, INNER_W, CLR_LIGHT_YELLOW);
             
             drawEmptyBoxLine(INNER_W);
@@ -1562,14 +1562,14 @@ void menuWordMatching(TopicNode* root, HistoryList& history) {
             drawEmptyBoxLine(INNER_W);
             
             // Hien thi tu tieng Anh
-            drawBoxLineCentered("Tu can noi: " + roundCards[q]->english, INNER_W, CLR_BRIGHT_WHITE);
+            drawBoxLineCentered("Từ cần nối: " + roundCards[q]->english, INNER_W, CLR_BRIGHT_WHITE);
             
             drawEmptyBoxLine(INNER_W);
             drawThinSeparator(INNER_W);
             drawEmptyBoxLine(INNER_W);
             
             // Hien thi cac lua chon
-            drawBoxLine("  Chon nghia dung:", INNER_W, CLR_LIGHT_CYAN);
+            drawBoxLine("  Chọn nghĩa đúng:", INNER_W, CLR_LIGHT_CYAN);
             drawEmptyBoxLine(INNER_W);
             
             for (int i = 0; i < numInRound; i++) {
@@ -1581,7 +1581,7 @@ void menuWordMatching(TopicNode* root, HistoryList& history) {
             drawBottomBorder(INNER_W);
             
             cout << "\n";
-            int answer = inputChoice("Chon dap an (1-" + to_string(numInRound) + ", 0 = Thoat): ");
+            int answer = inputChoice("Chọn đáp án (1-" + to_string(numInRound) + ", 0 = Thoát): ");
             
             if (answer == 0) {
                 quitted = true;
@@ -1594,14 +1594,14 @@ void menuWordMatching(TopicNode* root, HistoryList& history) {
                 if (compareAnswerFlexible(shuffledAnswers[answer - 1], roundCards[q]->vietnamese)) {
                     totalCorrect++;
                     string feedback = getCorrectFeedback();
-                    showMessage("[OK] DUNG ROI! " + feedback, CLR_LIGHT_GREEN);
+                    showMessage("[OK] ĐÚNG RỒI! " + feedback, CLR_LIGHT_GREEN);
                 } else {
                     string feedback = getWrongFeedback();
                     showMessage("[X] SAI! " + feedback, CLR_LIGHT_RED);
-                    showMessage("     Dap an dung: " + roundCards[q]->vietnamese, CLR_YELLOW);
+                    showMessage("     Đáp án đúng: " + roundCards[q]->vietnamese, CLR_YELLOW);
                 }
             } else {
-                showMessage("[!] Lua chon khong hop le!", CLR_LIGHT_RED);
+                showMessage("[!] Lựa chọn không hợp lệ!", CLR_LIGHT_RED);
                 totalQuestions--;
                 q--;
             }
@@ -1617,7 +1617,7 @@ void menuWordMatching(TopicNode* root, HistoryList& history) {
     delete[] cardArr;
 
     if (totalQuestions == 0) {
-        showMessage("[i] Da thoat tro choi.", CLR_GRAY);
+        showMessage("[i] Đã thoát trò chơi.", CLR_GRAY);
         freeCardList(cards);
         pauseScreen();
         return;
@@ -1627,15 +1627,15 @@ void menuWordMatching(TopicNode* root, HistoryList& history) {
     clearScreen();
     drawTopBorder(INNER_W);
     drawEmptyBoxLine(INNER_W);
-    drawBoxLineCentered("KET QUA TRO NOI TU", INNER_W, CLR_LIGHT_YELLOW);
-    drawBoxLineCentered("Chu de: " + selectedName, INNER_W, CLR_YELLOW);
+    drawBoxLineCentered("KẾT QUẢ TRÒ NỐI TỪ", INNER_W, CLR_LIGHT_YELLOW);
+    drawBoxLineCentered("Chủ đề: " + selectedName, INNER_W, CLR_YELLOW);
     drawEmptyBoxLine(INNER_W);
     drawThinSeparator(INNER_W);
     drawEmptyBoxLine(INNER_W);
 
-    string resultStr = "Diem: " + to_string(totalCorrect) + " / " + to_string(totalQuestions);
+    string resultStr = "Điểm: " + to_string(totalCorrect) + " / " + to_string(totalQuestions);
     int pct = (totalQuestions > 0) ? (totalCorrect * 100 / totalQuestions) : 0;
-    string pctStr = "Ty le dung: " + to_string(pct) + "%";
+    string pctStr = "Tỷ lệ đúng: " + to_string(pct) + "%";
 
     int resultColor = (pct >= 80) ? CLR_LIGHT_GREEN :
                       (pct >= 50) ? CLR_LIGHT_YELLOW : CLR_LIGHT_RED;
@@ -1646,11 +1646,11 @@ void menuWordMatching(TopicNode* root, HistoryList& history) {
     drawEmptyBoxLine(INNER_W);
 
     if (pct >= 80) {
-        drawBoxLineCentered("Tuyet voi! Ban noi tu cuc tot!", INNER_W, CLR_LIGHT_GREEN);
+        drawBoxLineCentered("Tuyệt vời! Bạn nối từ cực tốt!", INNER_W, CLR_LIGHT_GREEN);
     } else if (pct >= 50) {
-        drawBoxLineCentered("Kha on! Lam them di nao!", INNER_W, CLR_LIGHT_YELLOW);
+        drawBoxLineCentered("Khá ổn! Làm thêm đi nào!", INNER_W, CLR_LIGHT_YELLOW);
     } else {
-        drawBoxLineCentered("Can on tap them nhe!", INNER_W, CLR_LIGHT_RED);
+        drawBoxLineCentered("Cần ôn tập thêm nhé!", INNER_W, CLR_LIGHT_RED);
     }
 
     drawEmptyBoxLine(INNER_W);
@@ -1658,7 +1658,7 @@ void menuWordMatching(TopicNode* root, HistoryList& history) {
 
     // Luu vao lich su
     string dateStr = getCurrentDate();
-    addHistory(history, dateStr, selectedName + " (Noi tu)", totalCorrect, totalQuestions);
+    addHistory(history, dateStr, selectedName + " (Nối từ)", totalCorrect, totalQuestions);
     saveHistory("History.txt", history);
 
     freeCardList(cards);
@@ -1684,7 +1684,7 @@ void menuReverseQuiz(TopicNode* root, HistoryList& history) {
     loadCards(getCardFileName(selectedName), cards);
 
     if (cards.count == 0) {
-        showMessage("[!] Chu de nay chua co Flash Card nao!", CLR_LIGHT_RED);
+        showMessage("[!] Chủ đề này chưa có Flash Card nào!", CLR_LIGHT_RED);
         freeCardList(cards);
         pauseScreen();
         return;
@@ -1703,7 +1703,7 @@ void menuReverseQuiz(TopicNode* root, HistoryList& history) {
         drawTopBorder(INNER_W);
         drawEmptyBoxLine(INNER_W);
 
-        string info = "VIET TIENG ANH - " + selectedName + "  [" + to_string(idx) + "/" + to_string(totalCards) + "]";
+        string info = "VIẾT TIẾNG ANH - " + selectedName + "  [" + to_string(idx) + "/" + to_string(totalCards) + "]";
         drawBoxLineCentered(info, INNER_W, CLR_LIGHT_YELLOW);
 
         drawEmptyBoxLine(INNER_W);
@@ -1714,7 +1714,7 @@ void menuReverseQuiz(TopicNode* root, HistoryList& history) {
         drawBottomBorder(INNER_W);
 
         cout << "\n";
-        string answer = inputString("Viet tu tieng Anh (0 = Thoat): ");
+        string answer = inputString("Viết từ tiếng Anh (0 = Thoát): ");
 
         if (answer == "0") {
             // Thoat giua chung
@@ -1726,11 +1726,11 @@ void menuReverseQuiz(TopicNode* root, HistoryList& history) {
         if (compareAnswerFlexible(answer, curr->english)) {
             correctCount++;
             string feedback = getCorrectFeedback();
-            showMessage("[OK] CHINH XAC! " + feedback, CLR_LIGHT_GREEN);
+            showMessage("[OK] CHÍNH XÁC! " + feedback, CLR_LIGHT_GREEN);
         } else {
             string feedback = getWrongFeedback();
-            showMessage("[X] SAI ROI! " + feedback, CLR_LIGHT_RED);
-            showMessage("     Dap an dung: " + curr->english, CLR_YELLOW);
+            showMessage("[X] SAI RỒI! " + feedback, CLR_LIGHT_RED);
+            showMessage("     Đáp án đúng: " + curr->english, CLR_YELLOW);
         }
 
         pauseScreen();
@@ -1738,7 +1738,7 @@ void menuReverseQuiz(TopicNode* root, HistoryList& history) {
     }
 
     if (quitted && totalCards == 0) {
-        showMessage("[i] Da thoat kiem tra.", CLR_GRAY);
+        showMessage("[i] Đã thoát kiểm tra.", CLR_GRAY);
         freeCardList(cards);
         pauseScreen();
         return;
@@ -1748,15 +1748,15 @@ void menuReverseQuiz(TopicNode* root, HistoryList& history) {
     clearScreen();
     drawTopBorder(INNER_W);
     drawEmptyBoxLine(INNER_W);
-    drawBoxLineCentered("KET QUA VIET TIENG ANH", INNER_W, CLR_LIGHT_YELLOW);
-    drawBoxLineCentered("Chu de: " + selectedName, INNER_W, CLR_YELLOW);
+    drawBoxLineCentered("KẾT QUẢ VIẾT TIẾNG ANH", INNER_W, CLR_LIGHT_YELLOW);
+    drawBoxLineCentered("Chủ đề: " + selectedName, INNER_W, CLR_YELLOW);
     drawEmptyBoxLine(INNER_W);
     drawThinSeparator(INNER_W);
     drawEmptyBoxLine(INNER_W);
 
-    string resultStr = "Diem: " + to_string(correctCount) + " / " + to_string(totalCards);
+    string resultStr = "Điểm: " + to_string(correctCount) + " / " + to_string(totalCards);
     int pct = (totalCards > 0) ? (correctCount * 100 / totalCards) : 0;
-    string pctStr = "Ty le dung: " + to_string(pct) + "%";
+    string pctStr = "Tỷ lệ đúng: " + to_string(pct) + "%";
 
     int resultColor = (pct >= 80) ? CLR_LIGHT_GREEN :
                       (pct >= 50) ? CLR_LIGHT_YELLOW : CLR_LIGHT_RED;
@@ -1767,11 +1767,11 @@ void menuReverseQuiz(TopicNode* root, HistoryList& history) {
     drawEmptyBoxLine(INNER_W);
 
     if (pct >= 80) {
-        drawBoxLineCentered("Xuat sac! Tieng Anh cua ban tot day!", INNER_W, CLR_LIGHT_GREEN);
+        drawBoxLineCentered("Xuất sắc! Tiếng Anh của bạn tốt đấy!", INNER_W, CLR_LIGHT_GREEN);
     } else if (pct >= 50) {
-        drawBoxLineCentered("Kha tot! Can luyen them!", INNER_W, CLR_LIGHT_YELLOW);
+        drawBoxLineCentered("Khá tốt! Cần luyện thêm!", INNER_W, CLR_LIGHT_YELLOW);
     } else {
-        drawBoxLineCentered("Can on tap va nho chinh ta!", INNER_W, CLR_LIGHT_RED);
+        drawBoxLineCentered("Cần ôn tập và nhớ chính tả!", INNER_W, CLR_LIGHT_RED);
     }
 
     drawEmptyBoxLine(INNER_W);
@@ -1779,7 +1779,7 @@ void menuReverseQuiz(TopicNode* root, HistoryList& history) {
 
     // Luu vao lich su
     string dateStr = getCurrentDate();
-    addHistory(history, dateStr, selectedName + " (Viet TA)", correctCount, totalCards);
+    addHistory(history, dateStr, selectedName + " (Viết TA)", correctCount, totalCards);
     saveHistory("History.txt", history);
 
     freeCardList(cards);
