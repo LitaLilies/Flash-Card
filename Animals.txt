@@ -12,3 +12,6 @@ horse|ngựa
 cow|bò
 pig|lợn
 chicken|gà
+ant|kiến
+sheep|cừu
+Crab|cua
