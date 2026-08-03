@@ -12,3 +12,6 @@ soup|súp
 salad|salad
 pizza|pizza
 burger|bánh hamburger
+spaghetti|mì ý
+ham|giăm bông
+pie|bánh táo
