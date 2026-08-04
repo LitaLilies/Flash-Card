@@ -1,2 +1,4 @@
+gray|xám
+rainbow|cầu vồng
 blue|xanh dương
 green|xanh lá

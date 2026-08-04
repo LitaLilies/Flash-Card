@@ -1008,40 +1008,72 @@ void menuLearnFlashCard(TopicNode* root) {
         delete qn;
     }
 
-    // Luu danh sach chua nho vao file on tap
-    if (wrongCards.count > 0) {
-        // Doc file on tap cu (neu co) va gop lai
-        CardList existingWrong;
-        initCardList(existingWrong);
-        loadCards(getWrongFileName(selectedName), existingWrong);
+    // Cap nhat file on tap theo ket qua moi nhat cua phien hoc.
+    CardList existingWrong;
+    initCardList(existingWrong);
+    loadCards(getWrongFileName(selectedName), existingWrong);
 
-        // Them cac tu moi (khong trung)
+    // Xoa khoi danh sach cu nhung the thuoc bo hien tai ma nguoi dung da nho.
+    CardNode* ec = existingWrong.head;
+    int existingIndex = 1;
+    while (ec) {
+        CardNode* nextExisting = ec->next;
+        bool belongsToCurrentDeck = false;
+        CardNode* deckCard = cards.head;
+        while (deckCard) {
+            if (compareAnswer(deckCard->english, ec->english)) {
+                belongsToCurrentDeck = true;
+                break;
+            }
+            deckCard = deckCard->next;
+        }
+
+        bool stillWrong = false;
         CardNode* wc = wrongCards.head;
         while (wc) {
-            // Kiem tra trung
-            bool found = false;
-            CardNode* ec = existingWrong.head;
-            while (ec) {
-                if (compareAnswer(ec->english, wc->english)) {
-                    found = true;
-                    break;
-                }
-                ec = ec->next;
-            }
-            if (!found) {
-                addCard(existingWrong, wc->english, wc->vietnamese);
+            if (compareAnswer(wc->english, ec->english)) {
+                stillWrong = true;
+                break;
             }
             wc = wc->next;
         }
 
-        saveCards(getWrongFileName(selectedName), existingWrong);
-        freeCardList(existingWrong);
+        if (belongsToCurrentDeck && !stillWrong) {
+            deleteCard(existingWrong, existingIndex);
+        } else {
+            existingIndex++;
+        }
+        ec = nextExisting;
+    }
 
-        showMessage("[i] Có " + to_string(wrongCards.count) + " từ chưa nhớ đã lưu vào ôn tập.",
-                    CLR_LIGHT_YELLOW);
+    // Them cac the chua nho moi, khong trung voi danh sach hien tai.
+    CardNode* wc = wrongCards.head;
+    while (wc) {
+        bool found = false;
+        ec = existingWrong.head;
+        while (ec) {
+            if (compareAnswer(ec->english, wc->english)) {
+                found = true;
+                break;
+            }
+            ec = ec->next;
+        }
+        if (!found) {
+            addCard(existingWrong, wc->english, wc->vietnamese);
+        }
+        wc = wc->next;
+    }
+
+    if (existingWrong.count > 0) {
+        saveCards(getWrongFileName(selectedName), existingWrong);
+        showMessage("[i] Hiện có " + to_string(existingWrong.count) +
+                    " từ trong danh sách ôn tập.", CLR_LIGHT_YELLOW);
     } else {
+        remove(getWrongFileName(selectedName).c_str());
         showMessage("[OK] Tuyệt vời! Bạn đã nhớ tất cả từ vựng!", CLR_LIGHT_GREEN);
     }
+
+    freeCardList(existingWrong);
 
     freeCardList(wrongCards);
     freeCardList(cards);

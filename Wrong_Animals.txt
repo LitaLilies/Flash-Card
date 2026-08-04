@@ -1,8 +1,0 @@
-chicken|gà
-fish|cá
-elephant|voi
-bear|gấu
-cat|mèo
-bird|chim
-horse|ngựa
-pig|lợn
